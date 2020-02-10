@@ -1,0 +1,330 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "type": "string",
+            "defaultValue": "myVirtualNetwork",
+            "metadata": {
+                "description": "The name of your VNET"
+            }
+        },
+        "vnetAddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+                "description": "VNET Address prefix"
+            }
+        },
+        "subnetParam": {
+            "type": "object",
+            "metadata": {
+                "description": "VNET Subnet JSON"
+            }
+        },
+        "nsgParam": {
+            "type": "object",
+            "metadata": {
+                "description": "NSG JSON"
+            }
+        },
+        "storageAccountName": {
+            "type": "string",
+            "defaultValue": "vmdiagnosticstorage001",
+            "metadata": {
+                "description": "The storage account name"
+            }
+        },
+        "cosmosDbName": {
+            "type": "string",
+            "defaultValue": "mycosmosdb001",
+            "metadata": {
+                "description": "The CosmosDB account name"
+            }
+        },
+        "streamAnalyticsName": {
+            "type": "string",
+            "defaultValue": "mystreamanalytics001",
+            "metadata": {
+                "description": "The Stream Analytics account name"
+            }
+        },
+        "postgresqlName": {
+            "type": "string",
+            "defaultValue": "mypostgresql001",
+            "metadata": {
+                "description": "The PostgreSQL account name"
+            }
+        },
+        "postgresqlAdminLogin": {
+            "type": "string",
+            "defaultValue": "sqlAdmin",
+            "metadata": {
+                "description": "The PostgreSQL admin username"
+            }
+        },
+        "postgresqlAdminPassword": {
+            "type": "securestring",
+            "defaultValue": "MyS3re@tPassw0rd",
+            "metadata": {
+                "description": "The PostgreSQL admin password"
+            }
+        },
+        "iotHubName": {
+            "type": "string",
+            "defaultValue": "myiothub0001",
+            "metadata": {
+                "description": "The IOT account name"
+            }
+        },
+        "availibilitySets": {
+            "type": "array",
+            "metadata": {
+                "description": "An array of availibility set names"
+            }
+        },
+        "vmParam": {
+            "type": "object",
+            "metadata": {
+                "description": "VM configuration JSON"
+            }
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2017-05-10",
+            "name": "linkedNSG",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/adampaternostro/Azure-Sample-ARM-Template-Architecture/master/nested/azuredeploy.nsg.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "nsgParam": {
+                        "value": "[parameters('nsgParam')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "linkedVNET",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/adampaternostro/Azure-Sample-ARM-Template-Architecture/master/nested/azuredeploy.vnet.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "vnetAddressPrefix": {
+                        "value": "[parameters('vnetAddressPrefix')]"
+                    },
+                    "subnetParam": {
+                        "value": "[parameters('subnetParam')]"
+                    }
+                }
+            },
+            "dependsOn": ["linkedNSG"]
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "linkedStorage",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/adampaternostro/Azure-Sample-ARM-Template-Architecture/master/nested/azuredeploy.storage.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "storageAccountName": {
+                        "value": "[parameters('storageAccountName')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "linkedCosmosDB",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/adampaternostro/Azure-Sample-ARM-Template-Architecture/master/nested/azuredeploy.cosmosdb.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "cosmosDbName": {
+                        "value": "[parameters('cosmosDbName')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "linkedStreamAnalytics",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/adampaternostro/Azure-Sample-ARM-Template-Architecture/master/nested/azuredeploy.streamanalytics.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "streamAnalyticsName": {
+                        "value": "[parameters('streamAnalyticsName')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "linkedPostgreSQL",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/adampaternostro/Azure-Sample-ARM-Template-Architecture/master/nested/azuredeploy.postgresql.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "postgresqlName": {
+                        "value": "[parameters('postgresqlName')]"
+                    },
+                    "postgresqlAdminLogin": {
+                        "value": "[parameters('postgresqlAdminLogin')]"
+                    },
+                    "postgresqlAdminPassword": {
+                        "value": "[parameters('postgresqlAdminPassword')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "linkedIOTHub",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/adampaternostro/Azure-Sample-ARM-Template-Architecture/master/nested/azuredeploy.iothub.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "iotHubName": {
+                        "value": "[parameters('iotHubName')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "linkedAvailibilitySets",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/adampaternostro/Azure-Sample-ARM-Template-Architecture/master/nested/azuredeploy.availabilityset.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "availibilitySets": {
+                        "value": "[parameters('availibilitySets')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "linkedVMPublicIP",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/adampaternostro/Azure-Sample-ARM-Template-Architecture/master/nested/azuredeploy.vm-public-ip.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vmParam": {
+                        "value": "[parameters('vmParam')]"
+                    },
+                    "storageAccountName": {
+                        "value": "[parameters('storageAccountName')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "linkedVMNIC",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/adampaternostro/Azure-Sample-ARM-Template-Architecture/master/nested/azuredeploy.vm-nic.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vmParam": {
+                        "value": "[parameters('vmParam')]"
+                    },
+                    "storageAccountName": {
+                        "value": "[parameters('storageAccountName')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "linkedVNET",
+                "linkedVMPublicIP"
+            ]
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "linkedVM",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/adampaternostro/Azure-Sample-ARM-Template-Architecture/master/nested/azuredeploy.vm.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vmParam": {
+                        "value": "[parameters('vmParam')]"
+                    },
+                    "storageAccountName": {
+                        "value": "[parameters('storageAccountName')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "linkedAvailibilitySets",
+                "linkedVMNIC"
+            ]
+        }
+    ],
+    "outputs": {}
+}

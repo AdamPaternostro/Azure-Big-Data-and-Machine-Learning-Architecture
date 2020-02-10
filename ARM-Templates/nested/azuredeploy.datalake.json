@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "dataLakeName": {
+      "type": "string"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "Standard_RAGRS",
+        "tier": "Standard"
+      },
+      "kind": "StorageV2",
+      "name": "[parameters('dataLakeName')]",
+      "apiVersion": "2018-03-01-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": [],
+          "defaultAction": "Allow"
+        },
+        "supportsHttpsTrafficOnly": true,
+        "isHnsEnabled":true,
+        "accessTier": "Hot",
+        "encryption": {
+          "services": {
+            "file": {
+              "enabled": true
+            },
+            "blob": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        }
+      },
+      "dependsOn": []
+    }
+  ],
+  "outputs": {}
+}

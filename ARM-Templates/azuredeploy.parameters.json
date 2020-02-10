@@ -1,0 +1,209 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "nsgParam": {
+            "value": {
+                "nsgConfig": [
+                    {
+                        "name": "nsg-app-gateway"
+                    },
+                    {
+                        "name": "nsg-iot-hub"
+                    },
+                    {
+                        "name": "nsg-connection-server"
+                    },
+                    {
+                        "name": "nsg-platform"
+                    },
+                    {
+                        "name": "nsg-jumpbox"
+                    }
+                ]
+            }
+        },
+        "vnetName": {
+            "value": "myVirtualNetwork"
+        },
+        "vnetAddressPrefix": {
+            "value": "10.174.8.0/24"
+        },
+        "subnetParam": {
+            "value": {
+                "subnetConfig": [
+                    {
+                        "name": "subnet-app-gateway",
+                        "addressPrefix": "10.174.8.0/29",
+                        "nsgName": "nsg-app-gateway"
+                    },
+                    {
+                        "name": "subnet-connection-server",
+                        "addressPrefix": "10.174.8.16/28",
+                        "nsgName": "nsg-connection-server"
+                    },
+                    {
+                        "name": "subnet-zookeeper",
+                        "addressPrefix": "10.174.8.64/28",
+                        "nsgName": "nsg-platform"
+                    },
+                    {
+                        "name": "subnet-platform",
+                        "addressPrefix": "10.174.8.48/28",
+                        "nsgName": "nsg-platform"
+                    },
+                    {
+                        "name": "subnet-iot-hub",
+                        "addressPrefix": "10.174.8.32/28",
+                        "nsgName": "nsg-iot-hub"
+                    },
+                    {
+                        "name": "subnet-jumpbox",
+                        "addressPrefix": "10.174.8.80/28",
+                        "nsgName": "nsg-jumpbox"
+                    }
+                ]
+            }
+        },
+        "storageAccountName": {
+            "value": "vmdiagnosticstorage001"
+        },
+        "cosmosDbName": {
+            "value": "mycosmosdb001"
+        },
+        "streamAnalyticsName": {
+            "value": "mystreamanalytics001"
+        },
+        "postgresqlName": {
+            "value": "mypostgresql001"
+        },
+        "postgresqlAdminLogin": {
+            "value": "sqlAdmin"
+        },
+        "postgresqlAdminPassword": {
+            "value": "MyS3re@tPassw0rd"
+        },
+        "iotHubName": {
+            "value": "myiothub0001"
+        },
+        "availibilitySets": {
+            "value": [
+                "availset-iot-hub",
+                "availset-connection-server",
+                "availset-zookeeper",
+                "availset-platform"
+            ]
+        },
+        "vmParam": {
+            "value": {
+                "vmConfig": [
+                    {
+                        "comment": "Connection Server (primary)",
+                        "vmName": "vm-conn-svr-01",
+                        "vmSize": "Standard_DS2_v2",
+                        "publicIPAddress": "false",
+                        "availabilitySet": "availset-connection-server",
+                        "nsg": "nsg-connection-server",
+                        "subnet": "subnet-connection-server"
+                    },
+                    {
+                        "comment": "Connection Server (secondary)",
+                        "vmName": "vm-conn-svr-02",
+                        "vmSize": "Standard_DS2_v2",
+                        "publicIPAddress": "false",
+                        "availabilitySet": "availset-connection-server",
+                        "nsg": "nsg-connection-server",
+                        "subnet": "subnet-connection-server"
+                    },
+                    {
+                        "comment": "IoT Hub Connector",
+                        "vmName": "vm-iot-hub",
+                        "vmSize": "Standard_DS2_v2",
+                        "publicIPAddress": "false",
+                        "availabilitySet": "availset-iot-hub",
+                        "nsg": "nsg-iot-hub",
+                        "subnet": "subnet-iot-hub"
+                    },
+                    {
+                        "comment": "Platform ThingWatcher / Thing Predictor (active)",
+                        "vmName": "vm-platform-01",
+                        "vmSize": "Standard_DS2_v2",
+                        "publicIPAddress": "false",
+                        "availabilitySet": "availset-platform",
+                        "nsg": "nsg-platform",
+                        "subnet": "subnet-platform"
+                    },
+                    {
+                        "comment": "Platform ThingWatcher / Thing Predictor (passive)",
+                        "vmName": "vm-platform-02",
+                        "vmSize": "Standard_DS2_v2",
+                        "publicIPAddress": "false",
+                        "availabilitySet": "availset-platform",
+                        "nsg": "nsg-platform",
+                        "subnet": "subnet-platform"
+                    },
+                    {
+                        "comment": "Zookeeper 01",
+                        "vmName": "vm-zookeeper-01",
+                        "vmSize": "Standard_DS2_v2",
+                        "publicIPAddress": "false",
+                        "availabilitySet": "availset-zookeeper",
+                        "nsg": "nsg-platform",
+                        "subnet": "subnet-zookeeper"
+                    },
+                    {
+                        "comment": "Zookeeper 02",
+                        "vmName": "vm-zookeeper-02",
+                        "vmSize": "Standard_DS2_v2",
+                        "publicIPAddress": "false",
+                        "availabilitySet": "availset-zookeeper",
+                        "nsg": "nsg-platform",
+                        "subnet": "subnet-zookeeper"
+                    },
+                    {
+                        "comment": "Zookeeper 03",
+                        "vmName": "vm-zookeeper-03",
+                        "vmSize": "Standard_DS2_v2",
+                        "publicIPAddress": "false",
+                        "availabilitySet": "availset-zookeeper",
+                        "nsg": "nsg-platform",
+                        "subnet": "subnet-zookeeper"
+                    },
+                    {
+                        "comment": "Studio Experience Server",
+                        "vmName": "vm-exp-svr",
+                        "vmSize": "Standard_DS2_v2",
+                        "publicIPAddress": "false",
+                        "availabilitySet": "",
+                        "nsg": "nsg-platform",
+                        "subnet": "subnet-platform"
+                    },
+                    {
+                        "comment": "Studio Analytics Server",
+                        "vmName": "vm-analytics",
+                        "vmSize": "Standard_DS2_v2",
+                        "publicIPAddress": "false",
+                        "availabilitySet": "",
+                        "nsg": "nsg-platform",
+                        "subnet": "subnet-platform"
+                    },
+                    {
+                        "comment": "Jumpbox",
+                        "vmName": "vm-jumpbox-01",
+                        "vmSize": "Standard_DS2_v2",
+                        "publicIPAddress": "true",
+                        "availabilitySet": "",
+                        "nsg": "nsg-jumpbox",
+                        "subnet": "subnet-jumpbox"
+                    }
+                ],
+                "adminLogin": "vmAdminUser",
+                "adminPassword": "MyS3re@tPassw0rd",
+                "publisher": "MicrosoftWindowsServer",
+                "offer": "WindowsServer",
+                "sku": "2012-R2-Datacenter",
+                "version": "latest"
+            }
+        }
+    }
+}
