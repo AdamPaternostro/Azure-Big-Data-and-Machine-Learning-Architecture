@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "machineLearningWorkspaceName": {
+            "value": "mlworkspace00005"
+        },
+        "machineLearningSku": {
+            "value": "enterprise"
+        },
+        "machineLearningHDI": {
+            "value": "false"
+        },
+        "machineLearningEncryptionStatus": {
+            "value": "Disabled"
+        },
+        "machineLearningKeyVaultKey": {
+            "value": ""
+        },
+        "machineLearningKeyVaultUri": {
+            "value": ""
+        },
+        "keyVaultName": {
+            "value": "keyvault00005"
+        },
+        "mlApplicationInsightsName": {
+            "value": "mlappinsight00005"
+        },
+        "acrName": {
+            "value": "acr00005"
+        },
+        "mlStorageAccountName": {
+            "value": "mlstorage00005"
+        }
+    }
+}

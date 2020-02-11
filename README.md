@@ -6,6 +6,7 @@ A ready to use architecture for processing data and performing machine learning 
 - DONE: Storage (Landing)
 - Service Bus (or Azure queue)
 - DONE: Data Factory
+  - Need to link a Git Repo
 - App Service
   - Azure Function (Call ADF)
   - Azure Function (Customer get SAS token)
@@ -13,15 +14,15 @@ A ready to use architecture for processing data and performing machine learning 
  - DONE: CosmosDB
  - DONE: ADLS Gen 2
  - DONE: Databricks
-- Machine Learning Services
- - App Insights
- - Storage
- - Key Vault
- - 
+- DONE: Machine Learning Services
+ - DONE: App Insights (app service and ml workspace)
+ - DONE: Storage
+ - DONE: Key Vault
+ - DONE: Container Registry
 - DONE: SQL DW
+- DONE: Analysis Services
 - SQL Hyperscale
 - Synapse Workspace (preview pending)
-- DONE: Analysis Services
 
 ### Streaming
 - Event Hub

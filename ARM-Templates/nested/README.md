@@ -45,6 +45,20 @@ az group deployment create --name $deploymentName --resource-group $resourceGrou
 today=`date +%Y-%m-%d-%H-%M-%S`
 deploymentName="MyDeployment-$today"
 az group deployment create --name $deploymentName --resource-group $resourceGroup --template-file azuredeploy.app-insights.json --parameters @local.parameters.app-insights.json
+
+today=`date +%Y-%m-%d-%H-%M-%S`
+deploymentName="MyDeployment-$today"
+az group deployment create --name $deploymentName --resource-group $resourceGroup --template-file azuredeploy.keyvault.json --parameters @local.parameters.keyvault.json
+
+today=`date +%Y-%m-%d-%H-%M-%S`
+deploymentName="MyDeployment-$today"
+az group deployment create --name $deploymentName --resource-group $resourceGroup --template-file azuredeploy.container-registry.json --parameters @local.parameters.container-registry.json
+
+# Depends on Storage, App Insights, Container Registry and KeyVault
+today=`date +%Y-%m-%d-%H-%M-%S`
+deploymentName="MyDeployment-$today"
+az group deployment create --name $deploymentName --resource-group $resourceGroup --template-file azuredeploy.machinelearning.json --parameters @local.parameters.machinelearning.json
+
 ```
 
 # Azure Powershell
@@ -93,4 +107,20 @@ New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resource
 $today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
 $deploymentName="MyDeployment-$today"
 New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.app-insights.json -TemplateParameterFile local.parameters.app-insights.json
+
+$today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
+$deploymentName="MyDeployment-$today"
+New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.keyvault.json -TemplateParameterFile local.parameters.keyvault.json
+
+$today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
+$deploymentName="MyDeployment-$today"
+New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.container-registry.json -TemplateParameterFile local.parameters.container-registry.json
+
+# Depends on Storage, App Insights, Container Registry and KeyVault
+$today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
+$deploymentName="MyDeployment-$today"
+New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.machinelearning.json -TemplateParameterFile local.parameters.machinelearning.json
+
+
+
 ```

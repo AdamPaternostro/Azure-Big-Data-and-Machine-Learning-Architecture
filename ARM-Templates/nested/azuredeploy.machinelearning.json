@@ -1,0 +1,100 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "machineLearningWorkspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Specifies the name of the Azure Machine Learning workspace."
+            }
+        },
+        "machineLearningSku": {
+            "type": "string",
+            "defaultValue": "basic",
+            "allowedValues": [
+                "basic",
+                "enterprise"
+            ],
+            "metadata": {
+                "description": "Specifies the sku, also referred to as 'edition' of the Azure Machine Learning workspace."
+            }
+        },
+        "machineLearningHDI": {
+            "type": "string",
+            "defaultValue": "false",
+            "allowedValues": [
+                "false",
+                "true"
+            ],
+            "metadata": {
+                "description": "Specifies that the Azure Machine Learning workspace holds highly confidential data."
+            }
+        },
+        "machineLearningEncryptionStatus": {
+            "type": "string",
+            "defaultValue": "Disabled",
+            "allowedValues": [
+                "Enabled",
+                "Disabled"
+            ],
+            "metadata": {
+                "description": "Specifies if the Azure Machine Learning workspace should be encrypted with the customer managed key."
+            }
+        },
+        "machineLearningKeyVaultKey": {
+            "type": "string",
+            "metadata": {
+                "description": "Specifies the customer managed keyvault Resource Manager ID."
+            }
+        },
+        "machineLearningKeyVaultUri": {
+            "type": "string",
+            "metadata": {
+                "description": "Specifies the customer managed keyvault key uri."
+            }
+        },
+        "keyVaultName": {
+            "type": "string"
+        },
+        "mlApplicationInsightsName": {
+            "type": "string"
+        },
+        "acrName": {
+            "type": "string"
+        },
+        "mlStorageAccountName": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.MachineLearningServices/workspaces",
+            "apiVersion": "2020-01-01",
+            "name": "[parameters('machineLearningWorkspaceName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "identity": {
+                "type": "systemAssigned"
+            },
+            "sku": {
+                "tier": "[parameters('machineLearningSku')]",
+                "name": "[parameters('machineLearningSku')]"
+            },
+            "properties": {
+                "friendlyName": "[parameters('machineLearningWorkspaceName')]",
+                "keyVault": "[resourceId('Microsoft.KeyVault/vaults',parameters('keyVaultName'))]",
+                "applicationInsights": "[resourceId('Microsoft.Insights/components',parameters('mlApplicationInsightsName'))]",
+                "containerRegistry": "[resourceId('Microsoft.ContainerRegistry/registries',parameters('acrName'))]",
+                "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts/',parameters('mlStorageAccountName'))]",
+                "encryption": {
+                    "status": "[parameters('machineLearningEncryptionStatus')]",
+                    "keyVaultProperties": {
+                        "keyVaultArmId": "[parameters('machineLearningKeyVaultKey')]",
+                        "keyIdentifier": "[parameters('machineLearningKeyVaultUri')]"
+                    }
+                },
+                "machineLearningHDI": "[parameters('machineLearningHDI')]"
+            }
+        }
+    ]
+}
