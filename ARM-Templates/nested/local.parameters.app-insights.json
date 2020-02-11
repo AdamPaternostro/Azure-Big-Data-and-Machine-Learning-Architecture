@@ -1,0 +1,23 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "appInsightsParam": {
+            "value": {
+                "appInsightConfig": [
+                    {
+                        "name": "appserviceappinsight00005",
+                        "type": "web"
+                    },
+                    {
+                        "name": "mlappinsight00005",
+                        "type": "web"
+                    }
+                ]
+            }
+        },
+        "appInsightLocation": {
+            "value": "eastus"
+        }
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "aas-name": {
+            "type": "string"
+        },
+        "aas-sku": {
+            "type": "string"
+        },
+        "aas-admin": {
+            "type": "string"
+        },
+        "aas-backupBlobContainerUri": {
+            "type": "string"
+        },
+        "aas-managedMode": {
+            "type": "int"
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2017-08-01",
+            "name": "[parameters('aas-name')]",
+            "location": "[resourceGroup().location]",
+            "type": "Microsoft.AnalysisServices/servers",
+            "sku": {
+                "name": "[parameters('aas-sku')]"
+            },
+            "properties": {
+                "asAdministrators": {
+                    "members": [
+                        "[parameters('aas-admin')]"
+                    ]
+                },
+                "managedMode": "[parameters('aas-managedMode')]"
+            }
+        }
+    ]
+}

@@ -14,10 +14,14 @@ A ready to use architecture for processing data and performing machine learning 
  - DONE: ADLS Gen 2
  - DONE: Databricks
 - Machine Learning Services
+ - App Insights
+ - Storage
+ - Key Vault
+ - 
 - DONE: SQL DW
 - SQL Hyperscale
 - Synapse Workspace (preview pending)
-- Analysis Services
+- DONE: Analysis Services
 
 ### Streaming
 - Event Hub

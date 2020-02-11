@@ -2,8 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "storageAccountName": {
-            "type": "string"
+        "storageParam": {
+            "type": "object"
         }
     },
     "variables": {},
@@ -15,7 +15,7 @@
                 "tier": "Standard"
             },
             "kind": "Storage",
-            "name": "[parameters('storageAccountName')]",
+            "name": "[parameters('storageParam').storageConfig[copyIndex()].name]",
             "apiVersion": "2018-03-01-preview",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -37,6 +37,10 @@
                     },
                     "keySource": "Microsoft.Storage"
                 }
+            },
+            "copy": {
+                "name": "storagecopy",
+                "count": "[length(parameters('storageParam').storageConfig)]"
             },
             "dependsOn": []
         }

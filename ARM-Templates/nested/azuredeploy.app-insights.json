@@ -1,0 +1,29 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "appInsightsParam": {
+            "type": "object"
+        },
+        "appInsightLocation": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "name": "[parameters('appInsightsParam').appInsightConfig[copyIndex()].name]",
+            "type": "microsoft.insights/components",
+            "location": "[parameters('appInsightLocation')]",
+            "apiVersion": "2014-08-01",
+            "properties": {
+                "ApplicationId": "[parameters('appInsightsParam').appInsightConfig[copyIndex()].name]",
+                "Application_Type": "[parameters('appInsightsParam').appInsightConfig[copyIndex()].type]",
+                "Flow_Type": "Redfield"
+            },
+            "copy": {
+                "name": "appinsightcopy",
+                "count": "[length(parameters('appInsightsParam').appInsightConfig)]"
+            }
+        }
+    ]
+}

@@ -28,16 +28,23 @@ az group deployment create --name $deploymentName --resource-group $resourceGrou
 
 today=`date +%Y-%m-%d-%H-%M-%S`
 deploymentName="MyDeployment-$today"
-az group deployment create --name $deploymentName --resource-group $resourceGroup --template-file azuredeploy.ingestion-cosmosdb.json --parameters @local.parameters.ingestion-cosmosdb.json
+az group deployment create --name $deploymentName --resource-group $resourceGroup --template-file azuredeploy.cosmosdb.json --parameters @local.parameters.cosmosdb.json
 
 today=`date +%Y-%m-%d-%H-%M-%S`
 deploymentName="MyDeployment-$today"
-az group deployment create --name $deploymentName --resource-group $resourceGroup --template-file azuredeploy.ingestion-storage.json --parameters @local.parameters.ingestion-storage.json
+az group deployment create --name $deploymentName --resource-group $resourceGroup --template-file azuredeploy.storage.json --parameters @local.parameters.storage.json
 
 today=`date +%Y-%m-%d-%H-%M-%S`
 deploymentName="MyDeployment-$today"
 az group deployment create --name $deploymentName --resource-group $resourceGroup --template-file azuredeploy.synapse-analytics.json --parameters @local.parameters.synapse-analytics.json
 
+today=`date +%Y-%m-%d-%H-%M-%S`
+deploymentName="MyDeployment-$today"
+az group deployment create --name $deploymentName --resource-group $resourceGroup --template-file azuredeploy.analysisservices.json --parameters @local.parameters.analysisservices.json
+
+today=`date +%Y-%m-%d-%H-%M-%S`
+deploymentName="MyDeployment-$today"
+az group deployment create --name $deploymentName --resource-group $resourceGroup --template-file azuredeploy.app-insights.json --parameters @local.parameters.app-insights.json
 ```
 
 # Azure Powershell
@@ -69,15 +76,21 @@ New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resource
 
 $today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
 $deploymentName="MyDeployment-$today"
-New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.ingestion-cosmosdb.json -TemplateParameterFile local.parameters.ingestion-cosmosdb.json
+New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.cosmosdb.json -TemplateParameterFile local.parameters.cosmosdb.json
 
 $today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
 $deploymentName="MyDeployment-$today"
-New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.ingestion-storage.json -TemplateParameterFile local.parameters.ingestion-storage.json
+New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.storage.json -TemplateParameterFile local.parameters.storage.json
 
 $today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
 $deploymentName="MyDeployment-$today"
 New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.synapse-analytics.json -TemplateParameterFile local.parameters.synapse-analytics.json
 
+$today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
+$deploymentName="MyDeployment-$today"
+New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.analysisservices.json -TemplateParameterFile local.parameters.analysisservices.json
 
+$today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
+$deploymentName="MyDeployment-$today"
+New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.app-insights.json -TemplateParameterFile local.parameters.app-insights.json
 ```
