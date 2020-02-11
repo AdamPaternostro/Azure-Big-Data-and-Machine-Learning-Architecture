@@ -121,6 +121,10 @@ $today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
 $deploymentName="MyDeployment-$today"
 New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.machinelearning.json -TemplateParameterFile local.parameters.machinelearning.json
 
+# Depends on App Insights
+$today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
+$deploymentName="MyDeployment-$today"
+New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.app-service.json -TemplateParameterFile local.parameters.app-service.json
 
 
 ```

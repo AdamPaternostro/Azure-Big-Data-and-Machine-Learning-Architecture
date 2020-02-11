@@ -1,0 +1,30 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "appServiceName": {
+            "type": "string"
+        },    
+        "appServiceSku": {
+            "type": "string"
+        },
+        "appServiceSkuCode": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2018-11-01",
+            "name": "[parameters('appServiceName')]",
+            "type": "Microsoft.Web/serverfarms",
+            "location": "[resourceGroup().location]",
+            "kind": "app",
+            "tags": null,
+            "properties": {},
+            "sku": {
+                "Tier": "[parameters('appServiceSku')]",
+                "Name": "[parameters('appServiceSkuCode')]"
+            }
+        }
+    ]
+}

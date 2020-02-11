@@ -8,30 +8,13 @@ This is the set of ARM templates that will deploy this architecture
 * Click "Edit Parameters" and upload your azuredeploy.parameters.json
 
 
-## Actions
-<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fadampaternostro%2FAzure-Sample-ARM-Template-Architecture%2Fmaster%2Fazuredeploy.json" target="_blank"><img src="http://armviz.io/visualizebutton.png"/></a>
-
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fadampaternostro%2FAzure-Sample-ARM-Template-Architecture%2Fmaster%2Fazuredeploy.json" target="_blank">
-    <img src="http://azuredeploy.net/deploybutton.png"/> 
-</a>
-
 ## Overview of Templates
 The below diagram shows the layout of the templates.  The templates have been nested such that each nested template can be tested independently and then linked in the master template.  The master template will pass the parameters to each linked template and reference an dependencies between the linked templates.
 
 ![alt tag](https://raw.githubusercontent.com/adampaternostro/Azure-Sample-ARM-Template-Architecture/master/ARM-Architecture.png)
 
 ### Specific template notes
-*  The VM template has the most complex set of parameters
-   *  The availabilitySet parameter can be set to an empty string will specifics no availibility set for the VM.
-   *  The publicIPAddress parameter can be set to true or false which determines if the NIC card is assigned a public IP address.  Conditions are used in the ARM template to achive this.
-   *  The VM template uses just a single parameter file which is shared between the NIC, Public IPs and the VMs.  This simplified some testing.
-*  The VNET template does a loop to create each subnet.  The subnets cannot be placed in a seperate linked template since when you run the ARM template a second time it will fail.  The VNET will attempt to remove all the subnets when the subnets are in a seperate template.
-
-
-### Examples
-* azuredeploy.availabilityset uses the copy command to create many exact copies
-* azuredeploy.vm-nic uses an "if" statement to conditionally create a sub-resource (or null out the JSON)
-* azuredeploy.vnet uses a copy command for a sub-resource
+*  None
 
 
 ## To Run via command line (Linux)

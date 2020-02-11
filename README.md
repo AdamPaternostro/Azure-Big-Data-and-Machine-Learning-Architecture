@@ -3,33 +3,33 @@ A ready to use architecture for processing data and performing machine learning 
 
 
 ### ARM Templates
-- DONE: Storage (Landing)
-- Service Bus (or Azure queue)
+- DONE: Storage (landing, machine learning, functionapp)
 - DONE: Data Factory
-  - Need to link a Git Repo
-- App Service
-  - Azure Function (Call ADF)
-  - Azure Function (Customer get SAS token)
-  - Azure Function (Process AAS Cube)
- - DONE: CosmosDB
- - DONE: ADLS Gen 2
- - DONE: Databricks
+- DONE App Service
+    - Azure Function (Call ADF)
+    - Azure Function (Customer get SAS token)
+    - Azure Function (Process AAS Cube)
+- DONE: CosmosDB
+- DONE: ADLS Gen 2
+- DONE: Databricks
 - DONE: Machine Learning Services
- - DONE: App Insights (app service and ml workspace)
- - DONE: Storage
- - DONE: Key Vault
- - DONE: Container Registry
+- DONE: App Insights (app service and ml workspace)
+- DONE: Key Vault
+- DONE: Container Registry (for machine learning)
 - DONE: SQL DW
 - DONE: Analysis Services
-- SQL Hyperscale
-- Synapse Workspace (preview pending)
 
-### Streaming
-- Event Hub
-- Sample database with CDC
+- SQL Hyperscale
+- Synapse Workspace (preview?)
+- Log Analytics
+- ADC (preview?)
+- Service Bus (or Azure queue)
+- Event Hub (if we do a straming same for CDC from a database)
+
 
 ### Secure it
-- VNET
+- VNET (We shoudl just have a global parameter that tucks this under a VNET?)
+
 
 ### Coding
 - Azure Function that processes service bus messages for batch ingestion (Adam)
@@ -37,11 +37,12 @@ A ready to use architecture for processing data and performing machine learning 
 - Azure Function get SAS token
 
 ### Wiring
-- ADF to GitHub
+- ADF to GitHub (we need an auth key so this might be best done by a person?)
 -
 
 ### Azure DevOps
 - Multistage templates
+
 
 ### Samples
 - Download sample data
