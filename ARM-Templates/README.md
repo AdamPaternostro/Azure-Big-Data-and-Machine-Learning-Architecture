@@ -1,13 +1,3 @@
-# Azure-Big-Data-and-Machine-Learning-Architecture
-This is the set of ARM templates that will deploy this architecture
-
-## How to run
-* Download azuredeploy.parameters.json
-* Make your edits
-* Click the Deploy to Azure button
-* Click "Edit Parameters" and upload your azuredeploy.parameters.json
-
-
 ## Overview of Templates
 The below diagram shows the layout of the templates.  The templates have been nested such that each nested template can be tested independently and then linked in the master template.  The master template will pass the parameters to each linked template and reference an dependencies between the linked templates.
 

@@ -2,6 +2,35 @@
 A ready to use architecture for processing data and performing machine learning in Azure
 
 
+## How to run
+
+### Cloning
+- Fork this Repo to a GitHub account
+- Clone your fork to your local computer
+- Fork the https://github.com/AdamPaternostro/Azure-Big-Data-and-Machine-Learning-Architecture-ADF to a GitHub account
+
+### Deploying the ARM templates
+You should run the templates in the nested folder from your computer.  This is the easiest way to debug.  You can run each step one by one.  The master linked template at the root folder is okay to run once you have run each step by step and verified.
+
+- Follow the Readme in the Nested folder
+   - Change each local.parameters.xxxxx.json files
+   - Run each step one by one in the Readme
+
+- If running the global template at the root
+   - Change the azuredeploy.parameters.json
+   - Check everything back into GitHub.  This assumes you have a public repo (if you want to secure your repo you need to implement this: https://github.com/AdamPaternostro/GitHub-Azure-Function-Proxy-for-ARM-Template) 
+   - Deploy by using the Readme.md at the root 
+
+### Configure Security
+- Run the InitializationScript.ps1 script (you should run step by step by hand)
+
+### Copy Sample Data
+- Open the data factory
+- Authorize Azure to talk to your GitHub
+- Run the pipeline: CopySampleDWDataToDataLake
+
+
+
 ### ARM Templates
 - DONE: Storage (landing, machine learning, functionapp)
 - DONE: Data Factory
@@ -45,7 +74,7 @@ A ready to use architecture for processing data and performing machine learning 
 
 
 ### Samples
-- Download sample data
+- DONE Download sample data
 - Sample generator program to generate streaming data for streaming pattern
 - Sample databricks notebooks for procssing
 - Sample Data flows for processing
@@ -57,6 +86,8 @@ A ready to use architecture for processing data and performing machine learning 
 - FTP would be great, but a lot of work
 - AzCopy use of customer uploading files
 
-Service Principle
-- Create
-- Key Vault? for ARM passwords, we would need to deploy this first (or at least have the secrets placed in it)
+### Security
+- Try to use MSI for everything!
+- Create service principle only if needed
+- Databricks could use Scopes for secrets
+- Could use KeyVault for secrets (if so then access using MSI)

@@ -1,24 +1,63 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-      "adfname": {
-        "type": "string",
-        "metadata": {
-                "description": "Specifies the name of the ADF."
-            }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adfname": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies the name of the ADF."
       }
     },
-    "resources": [
-      {
-        "apiVersion": "2018-06-01",
-        "name": "[parameters('adfname')]",
-        "location": "[resourceGroup().location]",
-        "type": "Microsoft.DataFactory/factories",
-        "identity": {
-          "type": "SystemAssigned"
-        },
-        "properties": {}
+    "adf_repo_accountName": {
+      "type": "string",
+      "metadata": {
+        "description": "e.g. https://github.com/AdamPaternostro"
       }
-    ]
-  }
+    },
+    "adf_repo_repositoryName": {
+      "type": "string",
+      "metadata": {
+        "description": "The repo name: Azure-Big-Data-and-Machine-Learning-Architecture-ADF"
+      }
+    },
+    "adf_repo_collaborationBranch": {
+      "type": "string",
+      "metadata": {
+        "description": "e.g. master"
+      }
+    },
+    "adf_repo_rootFolder": {
+      "type": "string",
+      "metadata": {
+        "description": "/ or /ADF, etc."
+      }
+    },
+    "adf_repo_type": {
+      "type": "string",
+      "metadata": {
+        "description": "FactoryVSTSConfiguration or FactoryGitHubConfiguration"
+      }
+    }
+  },
+
+  "resources": [
+    {
+      "apiVersion": "2018-06-01",
+      "name": "[parameters('adfname')]",
+      "location": "[resourceGroup().location]",
+      "type": "Microsoft.DataFactory/factories",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "repoConfiguration": {
+          "accountName": "[parameters('adf_repo_accountName')]",
+          "repositoryName": "[parameters('adf_repo_repositoryName')]",
+          "collaborationBranch": "[parameters('adf_repo_collaborationBranch')]",
+          "rootFolder": "[parameters('adf_repo_rootFolder')]",
+          "type": "[parameters('adf_repo_type')]"
+        }
+      }
+    }
+  ]
+}

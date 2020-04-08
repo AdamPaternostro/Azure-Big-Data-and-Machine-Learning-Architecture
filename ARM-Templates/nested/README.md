@@ -5,7 +5,7 @@ You need to sign in once and set your subscription once.
 ## Login, set subscription and resource parameters (only need to do once per session)
 ```
 az login
-az account set -s 64a14e46-6c7d-4063-9665-c295287ab709
+az account set -s REPLACE_ME
 resourceGroup="Azure-Big-Data-Machine-Learning"
 location="eastus"
 az group create --name $resourceGroup --location $location
@@ -65,7 +65,7 @@ az group deployment create --name $deploymentName --resource-group $resourceGrou
 ## Login, set subscription and resource parameters (only need to do once per session)
 ```
 Connect-AzAccount
-$subscriptionId="64a14e46-6c7d-4063-9665-c295287ab709"
+$subscriptionId="REPLACE_ME"
 $context = Get-AzSubscription -SubscriptionId $subscriptionId
 Set-AzContext $context
 $resourceGroup="Azure-Big-Data-Machine-Learning"

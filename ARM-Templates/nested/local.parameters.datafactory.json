@@ -4,6 +4,21 @@
     "parameters": {
         "adfname": {
             "value": "datafactory00005"
+        },
+        "adf_repo_accountName": {
+            "value": "AdamPaternostro"
+        },
+        "adf_repo_repositoryName": {
+            "value": "Azure-Big-Data-and-Machine-Learning-Architecture-ADF"
+        },
+        "adf_repo_collaborationBranch": {
+            "value": "master"
+        },
+        "adf_repo_rootFolder": {
+            "value": "/"
+        },
+        "adf_repo_type": {
+            "value": "FactoryGitHubConfiguration"
         }
     }
 }
