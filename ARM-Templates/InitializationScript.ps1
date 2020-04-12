@@ -1,5 +1,8 @@
 # NOTE: You might need to wait 5 or 10 minutes after running this script to ensure permissions are proprogated
 
+# SAS Token for ADF to copy data (public data)
+# https://adampaternostropublic.blob.core.windows.net/public?se=2030-04-10T12%3A21%3A00Z&sp=rl&sv=2018-03-28&sr=c&sig=USm051L16GAz4bgQGhacK6t6BEFSexDxQ1DeeIAui5Q%3D
+
 Connect-AzAccount
 
 # Select Subscription
