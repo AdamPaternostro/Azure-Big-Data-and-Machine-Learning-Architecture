@@ -10,6 +10,18 @@
         },
         "appServiceSkuCode": {
             "value": "D1"
+        },
+        "functionAppName": {
+            "value": "functionapp00005"
+        },
+        "functionAppStorageName": {
+            "value": "funcappstorage00005"
+        },
+        "functionAppAppInsightName": {
+            "value": "appserviceappinsight00005"
+        },
+        "keyVaultName": {
+            "value": "keyvault00005"
         }
     }
 }

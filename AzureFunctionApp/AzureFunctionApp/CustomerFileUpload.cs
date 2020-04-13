@@ -160,23 +160,6 @@ namespace AzureFunctionApp
             public string ContainerName { get; set; }
             public string SASToken { get; set; }
         }
-        /*
-        # Example:
-        # {"accountName":"landingzonestorage00005","containerName":"acmeinc","sasToken":"?sv=2018-03-28&sr=c&sig=uvhhtoqJhr8My5Oe73%2FQVAt3DVJ1k01wUj81cLt91Ck%3D&st=2020-04-10T19%3A11%3A09Z&se=2020-04-10T20%3A16%3A09Z&sp=wl"}
-        customerId="AcmeInc"
-        customerSecret="0DC8B9026ECD402C84C66AFB5B87E28C"
-        json=$(curl "http://localhost:7071/api/GetAzureStorageSASUploadToken?customerId=$customerId&customerSecret=$customerSecret")
-        accountName="$(echo -n $json | jq .accountName --raw-output)"
-        containerName="$(echo -n $json | jq .containerName --raw-output)"
-        sasToken="$(echo -n $json | jq .sasToken --raw-output)"
-
-        echo "Account Name:   $accountName"
-        echo "Container Name: $containerName"
-        echo "SAS Token:      $sasToken"
-
-        # Note: this does not work with the local storage emulator
-        az storage blob upload --container-name $containerName --file adam.txt --name adam.txt --account-name $accountName --sas-token $sasToken         
-        */
 
     } // class
 } // namespace

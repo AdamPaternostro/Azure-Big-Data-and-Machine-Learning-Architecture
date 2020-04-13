@@ -4,11 +4,23 @@
     "parameters": {
         "appServiceName": {
             "type": "string"
-        },    
+        },
         "appServiceSku": {
             "type": "string"
         },
         "appServiceSkuCode": {
+            "type": "string"
+        },
+        "functionAppName": {
+            "type": "string"
+        },
+        "functionAppStorageName": {
+            "type": "string"
+        },
+        "functionAppAppInsightName": {
+            "type": "string"
+        },
+        "keyVaultName": {
             "type": "string"
         }
     },
@@ -20,13 +32,66 @@
             "location": "[resourceGroup().location]",
             "kind": "app",
             "tags": null,
-            "properties": {},
+            "properties": {
+            },
             "sku": {
                 "Tier": "[parameters('appServiceSku')]",
                 "Name": "[parameters('appServiceSkuCode')]"
             }
+        },
+        {
+            "name": "[parameters('functionAppName')]",
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "location": "[resourceGroup().location]",
+            "kind": "functionapp",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms/', parameters('appServiceName'))]"
+            ],
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "dotnet"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('functionAppStorageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('functionAppStorageName')), '2017-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~2"
+                        },
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('microsoft.insights/components/', parameters('functionAppAppInsightName')), '2018-05-01-preview').InstrumentationKey]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('functionAppStorageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('functionAppStorageName')),'2017-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[toLower(parameters('functionAppName'))]"
+                        },
+                        {
+                            "name": "WEBSITE_TIME_ZONE",
+                            "value": "UTC"
+                        },
+                        {
+                            "name": "MY_KEY_VAULT",
+                            "value": "[parameters('keyVaultName')]"
+                        }
+                    ]
+                },
+                "name": "[parameters('functionAppName')]",
+                "clientAffinityEnabled": false,
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', parameters('appServiceName'))]"
+            }
         }
     ]
 }
-
-https://github.com/Azure/azure-quickstart-templates/blob/master/101-functions-managed-identity/azuredeploy.json
