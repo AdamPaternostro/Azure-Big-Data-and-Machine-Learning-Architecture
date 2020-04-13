@@ -32,6 +32,7 @@ echo "test" > myFile.txt
 az storage blob upload --container-name $containerName --file ./myFile.txt --name inbox/$today/myFile.txt --account-name $accountName --sas-token $sasToken    
 
 # Single to Azure we are done by putting a marker complete file
-touch end_file_$today.txt
+# The file MUST end in "end_file.txt"
+touch end_file.txt
 
-az storage blob upload --container-name $containerName --file end_file_$today.txt --name inbox/$today/end_file_$today.txt --account-name $accountName --sas-token $sasToken    
+az storage blob upload --container-name $containerName --file end_file.txt --name inbox/$today/end_file.txt --account-name $accountName --sas-token $sasToken    

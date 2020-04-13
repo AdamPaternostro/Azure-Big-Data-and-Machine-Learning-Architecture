@@ -29,7 +29,7 @@
                     }
                 },
                 "filter": {
-                    "subjectBeginsWith": "end_file",
+                    "subjectEndsWith": "end_file.txt",
                     "includedEventTypes": [
                         "Microsoft.Storage.BlobCreated"
                     ],
