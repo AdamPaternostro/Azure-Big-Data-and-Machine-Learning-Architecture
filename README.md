@@ -91,3 +91,9 @@ You should run the templates in the nested folder from your computer.  This is t
 - Create service principle only if needed
 - Databricks could use Scopes for secrets
 - Could use KeyVault for secrets (if so then access using MSI)
+
+
+## Notes
+- create blob containers via arm
+- create key vault policy via arm
+- 

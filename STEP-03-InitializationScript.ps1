@@ -11,6 +11,7 @@
 # $env:spApplicationId = "REPLACE_ME"
 # $env:spId = "REPLACE_ME"
 # $env.subscriptionId = "REPLACE_ME"
+# $env:tenantId = "REPLACE_ME"
 
 $tenantId=$(Get-ChildItem Env:tenantId).Value
 $subscriptionId=$(Get-ChildItem Env:subscriptionId).Value
@@ -27,7 +28,9 @@ Write-Output $spId
 # Get the subscription and then login using the service principal
 $securePassword = ConvertTo-SecureString $spPassword -AsPlainText -Force
 $psCredential = New-Object System.Management.Automation.PSCredential($spApplicationId , $securePassword)
+
 Connect-AzAccount -ServicePrincipal -SubscriptionId $subscriptionId -Tenant $tenantId -Credential $psCredential
+#Connect-AzAccount
 
 $context = Get-AzSubscription -SubscriptionId $subscriptionId
 Set-AzContext $context
@@ -37,14 +40,16 @@ Set-AzContext $context
 # Script parameters
 ###########################################################
 $resourceGroup="Azure-Big-Data-Machine-Learning"
+$dataFactoryName="datafactory00005"
+$dataLakeName="datalake00005"
+$keyVaultName="keyvault00005"
+$functionAppName="functionapp00005"
+$landingStorageAccountName="landingzonestorage00005"
 
 
 ###########################################################
 # Configure Managed Idenity for ADF to access the Data Lake
 ###########################################################
-$dataFactoryName="datafactory00005"
-$dataLakeName="datalake00005"
-
 $Identity=(Get-AzDataFactoryV2 -ResourceGroupName $resourceGroup -Name $dataFactoryName).Identity
 Write-Output $Identity.PrincipalId
 
@@ -59,9 +64,6 @@ New-AzRoleAssignment -ObjectId $ServicePrincipal.Id `
 ###########################################################
 # Configure KeyVault for storage keys used by Function App
 ###########################################################
-$keyVaultName="keyvault00005"
-$functionAppName="functionapp00005"
-$landingStorageAccountName="landingzonestorage00005"
 $landingStorageAccountKey=""
 $secretKeyLandingZoneStorageAccountName="LandingZoneStorageAccountName"
 $secretKeyLandingZoneStorageAccountKey="LandingZoneStorageAccountKey"
@@ -82,5 +84,28 @@ Set-AzKeyVaultSecret -VaultName $keyVaultName -Name $secretKeyLandingZoneStorage
 # Grant the Function App access to read the secret
 # Get the MSI id from the Function App
 # Get the Function App Name
+# ERROR: TO DO: You must be an Admin to do this since the service principal does not have azure ad access!!!!
 $functionAppSPAppId=$(Get-AzADServicePrincipal -DisplayName $functionAppName).ApplicationId
 Set-AzKeyVaultAccessPolicy -VaultName $keyVaultName -ServicePrincipalName $functionAppSPAppId -PermissionsToSecrets get  -PassThru
+
+
+###########################################################
+# Configure Blob Storage (landing zone) to push events to an AZure Function
+###########################################################
+$storageContext = $(New-AzStorageContext -StorageAccountName $landingStorageAccountName -UseConnectedAccount)
+
+# Create queue "fileevent"
+New-AzStorageQueue -Name "fileevent" -Context $storageContext
+
+
+#New-AzEventGridSubscription `
+#   -EventSubscriptionName CustomerFileUpload `
+#   -Endpoint /subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.Storage/storageAccounts/$landingStorageAccountName/queueServices/default/queues/fileevent `
+#   -ResourceGroupName $resourceGroup `
+#   -EndpointType "storagequeue" `
+#   -SubjectBeginsWith "end_file" `
+#   -IncludedEventType "Microsoft.Resources.ResourceWriteSuccess" `
+#   -MaxDeliveryAttempt 30 `
+#s   -DeadLetterEndpoint /subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.Storage/storageAccounts/$landingStorageAccountName/blobServices/default/containers/failedevent
+   
+   

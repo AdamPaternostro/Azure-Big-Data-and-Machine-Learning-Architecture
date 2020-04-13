@@ -1,0 +1,52 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "eventqueue": {
+            "type": "string"
+        },
+        "deadlettercontainer": {
+            "type": "string"
+        },
+        "storageAccount": {
+            "type": "string"
+        },
+        "eventSubName": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts/providers/eventSubscriptions",
+            "name": "[concat(parameters('storageAccount'), '/Microsoft.EventGrid/', parameters('eventSubName'))]",
+            "apiVersion": "2019-01-01",
+            "properties": {
+                "destination": {
+                    "endpointType": "StorageQueue",
+                    "properties": {
+                        "queueName": "[parameters('eventqueue')]",
+                        "resourceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount'))]"
+                    }
+                },
+                "filter": {
+                    "subjectBeginsWith": "end_file",
+                    "includedEventTypes": [
+                        "Microsoft.Storage.BlobCreated"
+                    ],
+                    "isSubjectCaseSensitive": "false"
+                },
+                "retryPolicy": {
+                    "maxDeliveryAttempts": "30",
+                    "eventTimeToLiveInMinutes": "120"
+                },
+                "deadLetterDestination": {
+                    "endpointType": "StorageBlob",
+                    "properties": {
+                        "blobContainerName": "[parameters('deadlettercontainer')]",
+                        "resourceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount'))]"
+                    }
+                }
+            }
+        }
+    ]
+}

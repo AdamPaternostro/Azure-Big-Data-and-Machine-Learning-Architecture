@@ -9,6 +9,7 @@ Set-Location C:\Azure-Big-Data-and-Machine-Learning-Architecture\ARM-Templates\n
 # $env:spApplicationId = "REPLACE_ME"
 # $env:spId = "REPLACE_ME"
 # $env.subscriptionId = "REPLACE_ME"
+# $env:tenantId = "REPLACE_ME"
 
 $tenantId=$(Get-ChildItem Env:tenantId).Value
 $subscriptionId=$(Get-ChildItem Env:subscriptionId).Value
@@ -63,6 +64,10 @@ New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resource
 
 $today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
 $deploymentName="MyDeployment-$today"
+New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.storage-containers.json -TemplateParameterFile local.parameters.storage-containers.json
+
+$today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
+$deploymentName="MyDeployment-$today"
 New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.synapse-analytics.json -TemplateParameterFile local.parameters.synapse-analytics.json
 
 $today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
@@ -90,3 +95,8 @@ New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resource
 $today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
 $deploymentName="MyDeployment-$today"
 New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.app-service.json -TemplateParameterFile local.parameters.app-service.json
+
+# Depends on Storage and Storage Containers
+$today=(Get-Date).ToString('yyyy-MM-dd-HH-mm-ss')
+$deploymentName="MyDeployment-$today"
+New-AzResourceGroupDeployment -Name $deploymentName -ResourceGroupName $resourceGroup -TemplateFile azuredeploy.event-grid.json -TemplateParameterFile local.parameters.event-grid.json

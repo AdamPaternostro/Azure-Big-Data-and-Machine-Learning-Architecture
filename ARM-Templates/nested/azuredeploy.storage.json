@@ -14,7 +14,7 @@
                 "name": "Standard_LRS",
                 "tier": "Standard"
             },
-            "kind": "Storage",
+            "kind": "StorageV2",
             "name": "[parameters('storageParam').storageConfig[copyIndex()].name]",
             "apiVersion": "2018-03-01-preview",
             "location": "[resourceGroup().location]",

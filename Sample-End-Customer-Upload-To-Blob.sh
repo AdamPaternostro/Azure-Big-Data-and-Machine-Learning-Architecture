@@ -11,7 +11,7 @@
 azureFunctionUrl="https://functionapp00005.azurewebsites.net"
 customerId="AcmeInc"
 customerSecret="0DC8B9026ECD402C84C66AFB5B87E28C"
-code="/dsLQephxBbVCNPI9kvWunO9s881t11XyCgI2xnh0a8PeRP4rsxJGw=="
+code="baBqKrKC97HA/sLvZvjHtxCq82a43UmevfNSOwJU9DSuUXt6dUAixA=="
 json=$(curl "$azureFunctionUrl/api/GetAzureStorageSASUploadToken?code=$code&customerId=$customerId&customerSecret=$customerSecret")
 
 # Parse the variables
