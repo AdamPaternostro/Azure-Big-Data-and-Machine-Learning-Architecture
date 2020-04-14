@@ -22,6 +22,9 @@
         },
         "keyVaultName": {
             "value": "keyvault00005"
-        }
+        },
+        "cosmosDbName": {
+            "value": "processingestion00005"
+        }        
     }
 }

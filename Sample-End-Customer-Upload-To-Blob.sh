@@ -29,6 +29,8 @@ today=`date +%Y-%m-%d`
 echo "test" > myFile.txt
 
 # Upload 1 or more files to a folder with the date
+# NOTE: You can also use azcopy
+# ./azcopy copy ./myFolder "https://$landingzonestorage00005.blob.core.windows.net/$containerName$sasToken" --recursive
 az storage blob upload --container-name $containerName --file ./myFile.txt --name inbox/$today/myFile.txt --account-name $accountName --sas-token $sasToken    
 
 # Single to Azure we are done by putting a marker complete file

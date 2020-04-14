@@ -14,27 +14,25 @@ using Microsoft.Azure.Services.AppAuthentication;
 
 namespace AzureFunctionApp
 {
-    public static class CustomerFileUpload
+    public static class GetAzureStorageSASUploadToken
     {
-        static string cloudAccountName = null;
-        static string cloudKey = null;
-        static int expireTokenTimeInMinutes = 60; // 1 hour
-
         [FunctionName("GetAzureStorageSASUploadToken")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             try
-
             {
                 log.LogInformation("GetAzureStorageSASUploadToken begin request.");
 
+                string cloudAccountName = null;
+                string cloudKey = null;
 
                 // You should load this data from CosmosDB or a Database
-                List<CustomerData> listCustomerData = new List<CustomerData>();
-                listCustomerData.Add(new CustomerData() { CustomerId = "AcmeInc", CustomerSecret = "0DC8B9026ECD402C84C66AFB5B87E28C", ContainerName = "acmeinc", Enabled = true });
-                listCustomerData.Add(new CustomerData() { CustomerId = "GlobalCorp", CustomerSecret = "001F859AC44D4FEEB8BBA7172D38899C", ContainerName = "globalcorp", Enabled = true });
+                //List<CustomerData> listCustomerData = new List<CustomerData>();
+                //listCustomerData.Add(new CustomerData() { CustomerId = "AcmeInc", CustomerSecret = "0DC8B9026ECD402C84C66AFB5B87E28C", ContainerName = "acmeinc", TokenExpireTimeInMinutes = 60, Enabled = true });
+                //listCustomerData.Add(new CustomerData() { CustomerId = "GlobalCorp", CustomerSecret = "001F859AC44D4FEEB8BBA7172D38899C", ContainerName = "globalcorp", TokenExpireTimeInMinutes = 60, Enabled = true });
+
 
 
                 // NOT Working - this would only allow this IP to upload the file (you may or may not want this if for some reason a different IP would upload)
@@ -67,19 +65,21 @@ namespace AzureFunctionApp
                 dynamic data = JsonConvert.DeserializeObject(requestBody);
                 customerId = customerId ?? data?.customerId;
                 customerSecret = customerSecret ?? data?.customerSecret;
+                customerId = customerId.ToLower();
 
+                DocumentDBRepository<CosmosIngestionData> documentDBRepository = new DocumentDBRepository<CosmosIngestionData>(log);
+                var result = documentDBRepository.GetItems(o => o.CustomerId == customerId && o.PartitionId == customerId && o.CustomerSecret == customerSecret).FirstOrDefault();
 
-                if (listCustomerData.Exists(o => o.CustomerId == customerId && o.CustomerSecret == customerSecret))
+                if (result != null)
                 {
                     // create a blob container
                     // create a SAS token with list and write privilages (no read or delete) - they can upload, but never download to protect their data
-                    CustomerData customerData = listCustomerData.Where(o => o.CustomerId == customerId && o.CustomerSecret == customerSecret).FirstOrDefault();
 
-                    string sasToken = GetSASToken(customerData.ContainerName, clientIP);
+                    string sasToken = GetSASToken(result.ContainerName, clientIP, result.TokenExpireTimeInMinutes, cloudAccountName, cloudKey);
                     ReturnData returnData = new ReturnData()
                     {
                         AccountName = cloudAccountName == "devstoreaccount1" ? "http://127.0.0.1:10000/devstoreaccount1" : cloudAccountName,
-                        ContainerName = customerData.ContainerName,
+                        ContainerName = result.ContainerName,
                         SASToken = sasToken
                     };
                     return (ActionResult)new OkObjectResult(returnData);
@@ -88,7 +88,7 @@ namespace AzureFunctionApp
                 {
                     return new UnauthorizedResult();
                 }
-                //    (ActionResult)new OkObjectResult($"Hello, {name}")
+
             }
             catch (Exception ex)
             {
@@ -99,7 +99,7 @@ namespace AzureFunctionApp
         } // Run
 
 
-        private static string GetSASToken(string containerName, string clientIPAddress)
+        private static string GetSASToken(string containerName, string clientIPAddress, int tokenExpireTimeInMinutes, string cloudAccountName, string cloudKey)
         {
 
             Microsoft.WindowsAzure.Storage.Auth.StorageCredentials storageCredentials = new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(cloudAccountName, cloudKey);
@@ -126,7 +126,7 @@ namespace AzureFunctionApp
             Microsoft.WindowsAzure.Storage.Blob.SharedAccessBlobPolicy policy = new Microsoft.WindowsAzure.Storage.Blob.SharedAccessBlobPolicy();
             policy.Permissions = Microsoft.WindowsAzure.Storage.Blob.SharedAccessBlobPermissions.Write | Microsoft.WindowsAzure.Storage.Blob.SharedAccessBlobPermissions.List;
             policy.SharedAccessStartTime = DateTimeOffset.UtcNow.AddMinutes(-5); // always do in the past to prevent errors
-            policy.SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddMinutes(expireTokenTimeInMinutes);
+            policy.SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddMinutes(tokenExpireTimeInMinutes);
 
 
             string sasToken = null;
@@ -146,14 +146,7 @@ namespace AzureFunctionApp
 
         }
 
-        private struct CustomerData
-        {
-            public string CustomerId { get; set; }
-            public string CustomerSecret { get; set; }
-            public string ContainerName { get; set; }
-            public bool Enabled { get; set; }
-        }
-
+   
         private struct ReturnData
         {
             public string AccountName { get; set; }

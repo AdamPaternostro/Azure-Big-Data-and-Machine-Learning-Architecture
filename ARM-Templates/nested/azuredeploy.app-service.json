@@ -22,6 +22,9 @@
         },
         "keyVaultName": {
             "type": "string"
+        },
+        "cosmosDbName": {
+            "type": "string"
         }
     },
     "resources": [
@@ -85,6 +88,26 @@
                         {
                             "name": "MY_KEY_VAULT",
                             "value": "[parameters('keyVaultName')]"
+                        },
+                        {
+                            "name": "DocumentDBEndPoint",
+                            "value": "[concat('https://',parameters('cosmosDbName'),'.documents.azure.com:443/')]"
+                        },
+                        {
+                            "name": "DocumentDBCollection",
+                            "value": "processingestioncol"
+                        },
+                        {
+                            "name": "DocumentDBDatabase",
+                            "value": "[parameters('cosmosDbName')]"
+                        },
+                        {
+                            "name": "SubscriptionId",
+                            "value": "[subscription().id]"
+                        },
+                        {
+                            "name": "ResourceGroup",
+                            "value": "[resourcegroup().name]"
                         }
                     ]
                 },

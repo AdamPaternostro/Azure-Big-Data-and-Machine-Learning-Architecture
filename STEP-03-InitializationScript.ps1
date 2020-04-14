@@ -45,6 +45,7 @@ $dataLakeName="datalake00005"
 $keyVaultName="keyvault00005"
 $functionAppName="functionapp00005"
 $landingStorageAccountName="landingzonestorage00005"
+$cosmosDbName="processingestion00005"
 
 
 ###########################################################
@@ -88,6 +89,11 @@ Set-AzKeyVaultSecret -VaultName $keyVaultName -Name $secretKeyLandingZoneStorage
 $functionAppSPAppId=$(Get-AzADServicePrincipal -DisplayName $functionAppName).ApplicationId
 Set-AzKeyVaultAccessPolicy -VaultName $keyVaultName -ServicePrincipalName $functionAppSPAppId -PermissionsToSecrets get  -PassThru
 
+# This does not work
+#$func=(Get-AzWebApp -ResourceGroupName $resourceGroup -Name $functionAppName)
+#$functionAppSPAppId=$func.Identity.PrincipalId
+#Set-AzKeyVaultAccessPolicy -VaultName $keyVaultName -ObjectId $functionAppSPAppId -PermissionsToSecrets get  -PassThru
+
 
 ###########################################################
 # Configure Blob Storage (landing zone) to push events to an AZure Function
@@ -98,14 +104,14 @@ $storageContext = $(New-AzStorageContext -StorageAccountName $landingStorageAcco
 New-AzStorageQueue -Name "fileevent" -Context $storageContext
 
 
-#New-AzEventGridSubscription `
-#   -EventSubscriptionName CustomerFileUpload `
-#   -Endpoint /subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.Storage/storageAccounts/$landingStorageAccountName/queueServices/default/queues/fileevent `
-#   -ResourceGroupName $resourceGroup `
-#   -EndpointType "storagequeue" `
-#   -SubjectBeginsWith "end_file" `
-#   -IncludedEventType "Microsoft.Resources.ResourceWriteSuccess" `
-#   -MaxDeliveryAttempt 30 `
-#s   -DeadLetterEndpoint /subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.Storage/storageAccounts/$landingStorageAccountName/blobServices/default/containers/failedevent
-   
-   
+
+###########################################################
+# Assign Azure Function MSI to access CosmosDB
+###########################################################
+$func=(Get-AzWebApp -ResourceGroupName $resourceGroup -Name $functionAppName)
+$functionAppSPAppId=$func.Identity.PrincipalId
+
+New-AzRoleAssignment -ObjectId $functionAppSPAppId -RoleDefinitionName "Cosmos DB Account Reader Role" `
+-Scope "/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.DocumentDb/databaseAccounts/$cosmosDbName"
+
+
