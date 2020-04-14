@@ -66,6 +66,29 @@ namespace AzureFunctionApp
                 DocumentDBRepository<CosmosIngestionData> documentDBRepository = new DocumentDBRepository<CosmosIngestionData>(log);
                 var result = documentDBRepository.GetItems(o => o.CustomerId == customerId && o.PartitionId == customerId && o.CustomerSecret == customerSecret).FirstOrDefault();
 
+
+                // INSERT SEED DATA
+                if (result == null && customerId == "acmeinc")
+                {
+                    CosmosIngestionData acmeInc = new CosmosIngestionData();
+                    acmeInc.CustomerId = "acmeinc";
+                    acmeInc.CustomerSecret = "0DC8B9026ECD402C84C66AFB5B87E28C";
+                    acmeInc.TokenExpireTimeInMinutes = 60;
+                    acmeInc.isCustomerEnabled = true;
+                    acmeInc.PartitionId = "acmeinc";
+                    acmeInc.PipelineName = "CopyLandingDataToDataLake";
+                    acmeInc.ResourceGroup = Environment.GetEnvironmentVariable("ResourceGroup");
+                    acmeInc.DataFactoryName = Environment.GetEnvironmentVariable("DataFactoryName");
+                    acmeInc.SubscriptionId = Environment.GetEnvironmentVariable("SubscriptionId");
+                    acmeInc.isADFEnabled = true;
+
+                    // Insert the seed data
+                    documentDBRepository.Client.UpsertDocumentAsync(documentDBRepository.Collection.SelfLink, acmeInc).Wait();
+
+                    result = acmeInc;
+                }
+
+
                 if (result != null)
                 {
                     // create a blob container

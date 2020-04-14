@@ -33,7 +33,7 @@ namespace AzureFunctionApp
                 cloudKey = secretcloudKey.Result.Value;
 
                 Microsoft.WindowsAzure.Storage.Queue.CloudQueue cloudQueue = QueueService.ConnectToQueueStorage(queueName, cloudAccountName, cloudKey);
-            
+
                 Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage queueItem = QueueService.GetQueueItem(queueName, cloudQueue);
 
                 while (queueItem != null)
@@ -64,18 +64,16 @@ namespace AzureFunctionApp
             // Make sure we have the correct event
             if (fileEvent.eventType == "Microsoft.Storage.BlobCreated") // && fileEvent.subject.ToLower().EndsWith("end_file.txt"))
             {
-                // e.g. "subject": "/blobServices/default/containers/acmeinc/blobs/inbox/2020-04-13/end_file.txt"
+                // e.g. "subject": "/blobServices/default/containers/acmeinc/blobs/inbox/2020-04-13/test_end_file.txt"
+                //                                                   01234567890123456789012345678901234567890123456789  14 -> 30 =16
+                // e.g. "subject": "/blobServices/default/containers/acmeinc/blobs/test_end_file.txt"
+                //                                                   01234567890123456789012345678901234567890123456789  13 -> 13 = 0
                 string removedPrefix = fileEvent.subject.ToLower().Replace("/blobservices/default/containers/", string.Empty);
                 string customerId = removedPrefix.Substring(0, removedPrefix.IndexOf("/"));
                 string partitionId = removedPrefix.Substring(0, removedPrefix.IndexOf("/")); // this just happens to be the same as the customer id in the this example
-                string inputBlobPath = removedPrefix.Substring(removedPrefix.LastIndexOf("/") + 1);
-                
-                DateTime dtNow = DateTime.UtcNow; // you could make this EST or such....
-
-                string outputBlobDestination = string.Format("/raw/{0:yyyy}/{1:MM}/{2:dd}/{3}/", dtNow, dtNow, dtNow, customerId);
 
                 // Get the Cosmos DB data as to which pipeline belongs to this customer.
-                DocumentDBRepository <CosmosIngestionData> documentDBRepository = new DocumentDBRepository<CosmosIngestionData>(log);
+                DocumentDBRepository<CosmosIngestionData> documentDBRepository = new DocumentDBRepository<CosmosIngestionData>(log);
                 var result = documentDBRepository.GetItems(o => o.CustomerId == customerId && o.PartitionId == partitionId).FirstOrDefault();
 
                 if (result == null)
@@ -94,7 +92,15 @@ namespace AzureFunctionApp
                         try
                         {
                             // Try to start the pipeline (we are "trying" since technically something could have just disabled it :) )
-                            DataFactoryService.StartPipeline(fileEvent.subject, inputBlobPath, outputBlobDestination, result.PipelineName, result.ResourceGroup, result.DataFactoryName, result.SubscriptionId, log);
+                            DateTime dtNow = DateTime.UtcNow; // you could make this EST or such....
+                            string inputFileSystem = customerId;
+                            int blobsIndex = removedPrefix.IndexOf("/blobs/") + 7;
+                            int lastSlashIndex = removedPrefix.LastIndexOf("/");
+                            string inputFileDirectory = removedPrefix.Substring(blobsIndex, lastSlashIndex - blobsIndex);
+                            string outputFileSystem = "raw";
+                            string outputFileDirectory = string.Format("{0:yyyy}/{1:MM}/{2:dd}/{3}", dtNow, dtNow, dtNow, customerId);
+
+                            DataFactoryService.StartPipeline(inputFileSystem, inputFileDirectory, outputFileSystem, outputFileDirectory, result.PipelineName, result.ResourceGroup, result.DataFactoryName, result.SubscriptionId, log);
                             QueueService.DeleteQueueItem(queueName, queueItem, cloudQueue);
                         }
                         catch (Exception ex)

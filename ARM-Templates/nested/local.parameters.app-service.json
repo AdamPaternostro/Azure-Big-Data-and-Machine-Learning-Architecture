@@ -25,6 +25,9 @@
         },
         "cosmosDbName": {
             "value": "processingestion00005"
-        }        
+        },
+        "adfname": {
+            "value": "datafactory00005"
+        }       
     }
 }

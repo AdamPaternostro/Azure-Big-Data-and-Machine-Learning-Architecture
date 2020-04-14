@@ -25,6 +25,9 @@
         },
         "cosmosDbName": {
             "type": "string"
+        },
+        "adfname": {
+            "type": "string"
         }
     },
     "resources": [
@@ -108,6 +111,10 @@
                         {
                             "name": "ResourceGroup",
                             "value": "[resourcegroup().name]"
+                        },
+                        {
+                            "name": "DataFactoryName",
+                            "value": "[parameters('adfname')]"
                         }
                     ]
                 },
