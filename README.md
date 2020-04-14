@@ -1,8 +1,24 @@
 # Azure-Big-Data-and-Machine-Learning-Architecture
 A ready to use architecture for processing data and performing machine learning in Azure
 
+![alt tag](https://raw.githubusercontent.com/AdamPaternostro/Azure-Big-Data-and-Machine-Learning-Architecture/master/Images/Azure-Big-Data-Architecture.gif)
 
 ## How to run
+
+### Prerequqites
+1. Install PowerShell
+2. Install Azure CLI
+3. Install Visual Studio (to review the code)
+
+### Running
+1. Clone this repo to your local computer (you can fork if you want)
+2. Fork the https://github.com/AdamPaternostro/Azure-Big-Data-and-Machine-Learning-Architecture-ADF to a GitHub account
+3. Run STEP-01-CreateResourceGroupAndServicePrinciple.ps1
+4. Run STEP-02-Deploy-ARM-Template.ps1
+5. Run STEP-03-InitializationScript.ps1
+
+
+## Details
 
 ### Cloning
 - Fork this Repo to a GitHub account
@@ -30,51 +46,26 @@ You should run the templates in the nested folder from your computer.  This is t
 - Run the pipeline: CopySampleDWDataToDataLake
 
 
-
+# Task List
 ### ARM Templates
-- DONE: Storage (landing, machine learning, functionapp)
-- DONE: Data Factory
-- DONE App Service
-    - Azure Function (Call ADF)
-    - Azure Function (Customer get SAS token)
-    - Azure Function (Process AAS Cube)
-- DONE: CosmosDB
-- DONE: ADLS Gen 2
-- DONE: Databricks
-- DONE: Machine Learning Services
-- DONE: App Insights (app service and ml workspace)
-- DONE: Key Vault
-- DONE: Container Registry (for machine learning)
-- DONE: SQL DW
-- DONE: Analysis Services
-
 - SQL Hyperscale
 - Synapse Workspace (preview?)
 - Log Analytics
 - ADC (preview?)
-- Service Bus (or Azure queue)
-- Event Hub (if we do a straming same for CDC from a database)
-
 
 ### Secure it
 - VNET (We shoudl just have a global parameter that tucks this under a VNET?)
 
-
 ### Coding
-- Azure Function that processes service bus messages for batch ingestion (Adam)
 - Azure Function that processes the AAS cube (Jeremy)
-- Azure Function get SAS token
 
 ### Wiring
 - ADF to GitHub (we need an auth key so this might be best done by a person?)
--
 
 ### Azure DevOps
 - Multistage templates
 
-
 ### Samples
-- DONE Download sample data
 - Sample generator program to generate streaming data for streaming pattern
 - Sample databricks notebooks for procssing
 - Sample Data flows for processing
@@ -92,8 +83,6 @@ You should run the templates in the nested folder from your computer.  This is t
 - Databricks could use Scopes for secrets
 - Could use KeyVault for secrets (if so then access using MSI)
 
-
 ## Notes
 - create blob containers via arm
 - create key vault policy via arm
-- 

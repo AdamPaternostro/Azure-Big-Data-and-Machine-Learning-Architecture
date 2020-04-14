@@ -28,12 +28,6 @@ namespace AzureFunctionApp
                 string cloudAccountName = null;
                 string cloudKey = null;
 
-                // You should load this data from CosmosDB or a Database
-                //List<CustomerData> listCustomerData = new List<CustomerData>();
-                //listCustomerData.Add(new CustomerData() { CustomerId = "AcmeInc", CustomerSecret = "0DC8B9026ECD402C84C66AFB5B87E28C", ContainerName = "acmeinc", TokenExpireTimeInMinutes = 60, Enabled = true });
-                //listCustomerData.Add(new CustomerData() { CustomerId = "GlobalCorp", CustomerSecret = "001F859AC44D4FEEB8BBA7172D38899C", ContainerName = "globalcorp", TokenExpireTimeInMinutes = 60, Enabled = true });
-
-
 
                 // NOT Working - this would only allow this IP to upload the file (you may or may not want this if for some reason a different IP would upload)
                 string clientIP = null;
@@ -46,6 +40,8 @@ namespace AzureFunctionApp
                 }
                 else
                 {
+                    // Uses MSI to get an Azure AD token: You can run locally if you have a domain joined computer and your domain is synced with Azure AD
+                    // The Function App must be in a Policy to to read secrets
                     AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider();
                     KeyVaultClient keyvaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
                     string keyVault = Environment.GetEnvironmentVariable("MY_KEY_VAULT");
@@ -74,7 +70,6 @@ namespace AzureFunctionApp
                 {
                     // create a blob container
                     // create a SAS token with list and write privilages (no read or delete) - they can upload, but never download to protect their data
-
                     string sasToken = GetSASToken(result.ContainerName, clientIP, result.TokenExpireTimeInMinutes, cloudAccountName, cloudKey);
                     ReturnData returnData = new ReturnData()
                     {

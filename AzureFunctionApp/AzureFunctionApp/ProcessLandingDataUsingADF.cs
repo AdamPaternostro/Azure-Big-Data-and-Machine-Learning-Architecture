@@ -68,9 +68,14 @@ namespace AzureFunctionApp
                 string removedPrefix = fileEvent.subject.ToLower().Replace("/blobservices/default/containers/", string.Empty);
                 string customerId = removedPrefix.Substring(0, removedPrefix.IndexOf("/"));
                 string partitionId = removedPrefix.Substring(0, removedPrefix.IndexOf("/")); // this just happens to be the same as the customer id in the this example
+                string inputBlobPath = removedPrefix.Substring(removedPrefix.LastIndexOf("/") + 1);
+                
+                DateTime dtNow = DateTime.UtcNow; // you could make this EST or such....
+
+                string outputBlobDestination = string.Format("/raw/{0:yyyy}/{1:MM}/{2:dd}/{3}/", dtNow, dtNow, dtNow, customerId);
 
                 // Get the Cosmos DB data as to which pipeline belongs to this customer.
-                DocumentDBRepository<CosmosIngestionData> documentDBRepository = new DocumentDBRepository<CosmosIngestionData>(log);
+                DocumentDBRepository <CosmosIngestionData> documentDBRepository = new DocumentDBRepository<CosmosIngestionData>(log);
                 var result = documentDBRepository.GetItems(o => o.CustomerId == customerId && o.PartitionId == partitionId).FirstOrDefault();
 
                 if (result == null)
@@ -89,7 +94,7 @@ namespace AzureFunctionApp
                         try
                         {
                             // Try to start the pipeline (we are "trying" since technically something could have just disabled it :) )
-                            DataFactoryService.StartPipeline(fileEvent.subject, result.PipelineName, result.ResourceGroup, result.DataFactoryName, result.SubscriptionId);
+                            DataFactoryService.StartPipeline(fileEvent.subject, inputBlobPath, outputBlobDestination, result.PipelineName, result.ResourceGroup, result.DataFactoryName, result.SubscriptionId, log);
                             QueueService.DeleteQueueItem(queueName, queueItem, cloudQueue);
                         }
                         catch (Exception ex)

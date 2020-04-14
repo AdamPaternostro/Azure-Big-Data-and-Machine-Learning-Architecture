@@ -138,8 +138,8 @@ namespace AzureFunctionApp
             {
                 if (client == null)
                 {
-
-                    // Uses MSI to get a token to call to the ADF
+                    // Uses MSI to get an Azure AD token: You can run locally if you have a domain joined computer and your domain is synced with Azure AD
+                    // The Function App must be in the Owner Role of RBAC for the CosmosDB account
                     var tokenProvider = new AzureServiceTokenProvider();
                     string accessToken = tokenProvider.GetAccessTokenAsync("https://management.azure.com/").Result;
                     string subscriptionId = Environment.GetEnvironmentVariable("SubscriptionId");

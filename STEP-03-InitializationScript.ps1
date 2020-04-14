@@ -49,7 +49,7 @@ $cosmosDbName="processingestion00005"
 
 
 ###########################################################
-# Configure Managed Idenity for ADF to access the Data Lake
+# Configure Managed Idenity for ADF to access the Data Lake adn Landing Zone storage
 ###########################################################
 $Identity=(Get-AzDataFactoryV2 -ResourceGroupName $resourceGroup -Name $dataFactoryName).Identity
 Write-Output $Identity.PrincipalId
@@ -60,6 +60,11 @@ Write-Output $ServicePrincipal.Id
 New-AzRoleAssignment -ObjectId $ServicePrincipal.Id `
     -RoleDefinitionName "Storage Blob Data Contributor" `
     -Scope  "/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.Storage/storageAccounts/$dataLakeName"
+
+
+New-AzRoleAssignment -ObjectId $ServicePrincipal.Id `
+    -RoleDefinitionName "Storage Blob Data Contributor" `
+    -Scope  "/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.Storage/storageAccounts/$landingStorageAccountName"
 
 
 ###########################################################
