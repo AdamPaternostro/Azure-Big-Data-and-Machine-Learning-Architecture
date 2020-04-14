@@ -12,7 +12,7 @@ namespace AzureFunctionApp
     {
 
         [FunctionName("ProcessLandingDataUsingADF")]
-        public static void Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer, ILogger log)
+        public static void Run([TimerTrigger("0 */5 * * * *")]TimerInfo myTimer, ILogger log)
         {
             try
             {

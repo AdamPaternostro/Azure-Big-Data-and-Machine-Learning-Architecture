@@ -169,8 +169,6 @@ namespace AzureFunctionApp
                             response.EnsureSuccessStatusCode();
                             responseBody = response.Content.ReadAsStringAsync().Result;
 
-                            log.LogTrace($"responseBody {responseBody}");
-
                             JSONService jsonService = new JSONService();
                             cosmosDBKey = jsonService.Deserialize<CosmosDBKey>(responseBody);
                         }

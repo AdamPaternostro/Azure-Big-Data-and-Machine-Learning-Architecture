@@ -111,7 +111,18 @@ New-AzStorageQueue -Name "fileevent" -Context $storageContext
 $func=(Get-AzWebApp -ResourceGroupName $resourceGroup -Name $functionAppName)
 $functionAppSPAppId=$func.Identity.PrincipalId
 
-New-AzRoleAssignment -ObjectId $functionAppSPAppId -RoleDefinitionName "Cosmos DB Account Reader Role" `
+# Must be owner to use MSI to get the keys
+New-AzRoleAssignment -ObjectId $functionAppSPAppId -RoleDefinitionName "Owner" `
 -Scope "/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.DocumentDb/databaseAccounts/$cosmosDbName"
 
 
+###########################################################
+# Assign Azure Function MSI to access ADF
+###########################################################
+
+# TEST THIS
+New-AzRoleAssignment -ObjectId $functionAppSPAppId -RoleDefinitionName "Contributor" `
+-Scope "/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.DataFactory/factories/$dataFactoryName"
+
+
+# TODO, set App Service to Always ON!
