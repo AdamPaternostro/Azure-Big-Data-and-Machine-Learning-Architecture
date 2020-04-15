@@ -1,32 +1,30 @@
-# Change to your Nested directory
-Set-Location C:\Azure-Big-Data-and-Machine-Learning-Architecture\ARM-Templates\nested
+# This file should have been created for you by the STEP-01-CreateResourceGroupAndServicePrinciple.ps1 script
+Set-Location C:\Azure-Big-Data-and-Machine-Learning-Architecture\
+.\STEP-00-SetEnvironmentVariables.ps1
 
 ###########################################################
 # Connect
 ###########################################################
-# NOTE: You need to have these in environment variables
-# $env:spPassword = "REPLACE_ME"
-# $env:spApplicationId = "REPLACE_ME"
-# $env:spId = "REPLACE_ME"
-# $env.subscriptionId = "REPLACE_ME"
-# $env:tenantId = "REPLACE_ME"
-
 $tenantId=$(Get-ChildItem Env:tenantId).Value
 $subscriptionId=$(Get-ChildItem Env:subscriptionId).Value
 $spPassword=$(Get-ChildItem Env:spPassword).Value
 $spApplicationId=$(Get-ChildItem Env:spApplicationId).Value
 $spId=$(Get-ChildItem Env:spId).Value
+$resourceGroup=$(Get-ChildItem Env:resourceGroup).Value
 
 Write-Output $tenantId
 Write-Output $subscriptionId
 Write-Output $spPassword
 Write-Output $spApplicationId
 Write-Output $spId
+Write-Output $resourceGroup
 
 # Get the subscription and then login using the service principal
 $securePassword = ConvertTo-SecureString $spPassword -AsPlainText -Force
 $psCredential = New-Object System.Management.Automation.PSCredential($spApplicationId , $securePassword)
+
 Connect-AzAccount -ServicePrincipal -SubscriptionId $subscriptionId -Tenant $tenantId -Credential $psCredential
+#Connect-AzAccount
 
 $context = Get-AzSubscription -SubscriptionId $subscriptionId
 Set-AzContext $context
@@ -35,7 +33,7 @@ Set-AzContext $context
 ###########################################################
 # Script parameters
 ###########################################################
-$resourceGroup="Azure-Big-Data-Machine-Learning"
+
 
 
 ####################################################

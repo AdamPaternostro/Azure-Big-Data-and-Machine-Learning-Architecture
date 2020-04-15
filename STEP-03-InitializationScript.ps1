@@ -1,29 +1,25 @@
 # NOTE: You might need to wait 5 or 10 minutes after running this script to ensure permissions are proprogated
 
-# SAS Token for ADF to copy data (public data)
-# https://adampaternostropublic.blob.core.windows.net/public?se=2030-04-10T12%3A21%3A00Z&sp=rl&sv=2018-03-28&sr=c&sig=USm051L16GAz4bgQGhacK6t6BEFSexDxQ1DeeIAui5Q%3D
+# This file should have been created for you by the STEP-01-CreateResourceGroupAndServicePrinciple.ps1 script
+Set-Location C:\Azure-Big-Data-and-Machine-Learning-Architecture\
+.\STEP-00-SetEnvironmentVariables.ps1
 
 ###########################################################
 # Connect
 ###########################################################
-# NOTE: You need to have these in environment variable
-# $env:spPassword = "REPLACE_ME"
-# $env:spApplicationId = "REPLACE_ME"
-# $env:spId = "REPLACE_ME"
-# $env.subscriptionId = "REPLACE_ME"
-# $env:tenantId = "REPLACE_ME"
-
 $tenantId=$(Get-ChildItem Env:tenantId).Value
 $subscriptionId=$(Get-ChildItem Env:subscriptionId).Value
 $spPassword=$(Get-ChildItem Env:spPassword).Value
 $spApplicationId=$(Get-ChildItem Env:spApplicationId).Value
 $spId=$(Get-ChildItem Env:spId).Value
+$resourceGroup=$(Get-ChildItem Env:resourceGroup).Value
 
 Write-Output $tenantId
 Write-Output $subscriptionId
 Write-Output $spPassword
 Write-Output $spApplicationId
 Write-Output $spId
+Write-Output $resourceGroup
 
 # Get the subscription and then login using the service principal
 $securePassword = ConvertTo-SecureString $spPassword -AsPlainText -Force
@@ -39,7 +35,6 @@ Set-AzContext $context
 ###########################################################
 # Script parameters
 ###########################################################
-$resourceGroup="Azure-Big-Data-Machine-Learning"
 $dataFactoryName="datafactory00005"
 $dataLakeName="datalake00005"
 $keyVaultName="keyvault00005"
@@ -57,11 +52,14 @@ Write-Output $Identity.PrincipalId
 $ServicePrincipal=(Get-AzADServicePrincipal -ObjectId $Identity.PrincipalId)
 Write-Output $ServicePrincipal.Id
 
+# ERROR: This does not work when using a service principal to connect to Azure.  It says object id is ''
+# Cannot validate argument on parameter 'ObjectId'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again.
 New-AzRoleAssignment -ObjectId $ServicePrincipal.Id `
     -RoleDefinitionName "Storage Blob Data Contributor" `
     -Scope  "/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.Storage/storageAccounts/$dataLakeName"
 
-
+# ERROR: This does not work when using a service principal to connect to Azure.  It says object id is ''
+# Cannot validate argument on parameter 'ObjectId'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again.
 New-AzRoleAssignment -ObjectId $ServicePrincipal.Id `
     -RoleDefinitionName "Storage Blob Data Contributor" `
     -Scope  "/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.Storage/storageAccounts/$landingStorageAccountName"
@@ -88,16 +86,11 @@ $secretValueLandingZoneStorageAccountKey = ConvertTo-SecureString $landingStorag
 Set-AzKeyVaultSecret -VaultName $keyVaultName -Name $secretKeyLandingZoneStorageAccountKey -SecretValue $secretValueLandingZoneStorageAccountKey
 
 # Grant the Function App access to read the secret
-# Get the MSI id from the Function App
-# Get the Function App Name
-# ERROR: TO DO: You must be an Admin to do this since the service principal does not have azure ad access!!!!
+# ERROR: This does not work when using a service principal to connect to Azure.  It says not authorized
+# Get-AzADServicePrincipal : Insufficient privileges to complete the operation.
 $functionAppSPAppId=$(Get-AzADServicePrincipal -DisplayName $functionAppName).ApplicationId
+Write-Output functionAppSPAppId
 Set-AzKeyVaultAccessPolicy -VaultName $keyVaultName -ServicePrincipalName $functionAppSPAppId -PermissionsToSecrets get  -PassThru
-
-# This does not work
-#$func=(Get-AzWebApp -ResourceGroupName $resourceGroup -Name $functionAppName)
-#$functionAppSPAppId=$func.Identity.PrincipalId
-#Set-AzKeyVaultAccessPolicy -VaultName $keyVaultName -ObjectId $functionAppSPAppId -PermissionsToSecrets get  -PassThru
 
 
 ###########################################################
@@ -109,14 +102,15 @@ $storageContext = $(New-AzStorageContext -StorageAccountName $landingStorageAcco
 New-AzStorageQueue -Name "fileevent" -Context $storageContext
 
 
-
 ###########################################################
 # Assign Azure Function MSI to access CosmosDB
 ###########################################################
 $func=(Get-AzWebApp -ResourceGroupName $resourceGroup -Name $functionAppName)
 $functionAppSPAppId=$func.Identity.PrincipalId
 
-# Must be owner to use MSI to get the keys
+# Must be a CosmosDB Owner to use MSI to get the keys
+# ERROR: This does not work when using a service principal to connect to Azure.  It says object id is ''
+# Cannot validate argument on parameter 'ObjectId'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again.
 New-AzRoleAssignment -ObjectId $functionAppSPAppId -RoleDefinitionName "Owner" `
 -Scope "/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.DocumentDb/databaseAccounts/$cosmosDbName"
 
@@ -125,7 +119,8 @@ New-AzRoleAssignment -ObjectId $functionAppSPAppId -RoleDefinitionName "Owner" `
 # Assign Azure Function MSI to access ADF
 ###########################################################
 
-# TEST THIS
+# ERROR: This does not work when using a service principal to connect to Azure.  It says object id is ''
+# Cannot validate argument on parameter 'ObjectId'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again.
 New-AzRoleAssignment -ObjectId $functionAppSPAppId -RoleDefinitionName "Contributor" `
 -Scope "/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.DataFactory/factories/$dataFactoryName"
 
