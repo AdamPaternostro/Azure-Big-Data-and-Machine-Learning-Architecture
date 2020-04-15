@@ -25,8 +25,8 @@ Write-Output $resourceGroup
 $securePassword = ConvertTo-SecureString $spPassword -AsPlainText -Force
 $psCredential = New-Object System.Management.Automation.PSCredential($spApplicationId , $securePassword)
 
-Connect-AzAccount -ServicePrincipal -SubscriptionId $subscriptionId -Tenant $tenantId -Credential $psCredential
-#Connect-AzAccount
+#Connect-AzAccount -ServicePrincipal -SubscriptionId $subscriptionId -Tenant $tenantId -Credential $psCredential
+Connect-AzAccount
 
 $context = Get-AzSubscription -SubscriptionId $subscriptionId
 Set-AzContext $context

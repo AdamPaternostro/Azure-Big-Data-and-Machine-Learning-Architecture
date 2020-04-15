@@ -2,6 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "systemTopic": {
+            "type": "string"
+        },
         "eventqueue": {
             "type": "string"
         },
@@ -17,9 +20,9 @@
     },
     "resources": [
         {
-            "type": "Microsoft.Storage/storageAccounts/providers/eventSubscriptions",
-            "name": "[concat(parameters('storageAccount'), '/Microsoft.EventGrid/', parameters('eventSubName'))]",
-            "apiVersion": "2019-01-01",
+            "type": "Microsoft.EventGrid/systemTopics/eventSubscriptions",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[concat('fileeventTopic/', parameters('eventSubName'))]",
             "properties": {
                 "destination": {
                     "endpointType": "StorageQueue",
@@ -33,12 +36,13 @@
                     "includedEventTypes": [
                         "Microsoft.Storage.BlobCreated"
                     ],
-                    "isSubjectCaseSensitive": "false"
+                    "isSubjectCaseSensitive": false
                 },
                 "retryPolicy": {
-                    "maxDeliveryAttempts": "30",
-                    "eventTimeToLiveInMinutes": "120"
+                    "maxDeliveryAttempts": 30,
+                    "eventTimeToLiveInMinutes": 120
                 },
+                "eventDeliverySchema": "EventGridSchema",
                 "deadLetterDestination": {
                     "endpointType": "StorageBlob",
                     "properties": {

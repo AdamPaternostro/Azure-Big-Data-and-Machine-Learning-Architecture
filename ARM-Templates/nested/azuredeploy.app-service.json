@@ -120,7 +120,8 @@
                 },
                 "name": "[parameters('functionAppName')]",
                 "clientAffinityEnabled": false,
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', parameters('appServiceName'))]"
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', parameters('appServiceName'))]",
+                "AlwaysOn": true
             }
         }
     ]

@@ -2,6 +2,8 @@
 Set-Location C:\Azure-Big-Data-and-Machine-Learning-Architecture\
 .\STEP-00-SetEnvironmentVariables.ps1
 
+Set-Location C:\Azure-Big-Data-and-Machine-Learning-Architecture\ARM-Templates\nested
+
 ###########################################################
 # Connect
 ###########################################################

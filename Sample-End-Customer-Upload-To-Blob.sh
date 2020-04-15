@@ -5,7 +5,7 @@
 # Note: This does not work with the local storage emulator
 
 # Example returned JSON
-# {"accountName":"landingzonestorage00005","containerName":"acmeinc","sasToken":"?sv=2018-03-28&sr=c&sig=uvhhtoqJhr8My5Oe73%2..."}
+# {"accountName":"datalake00005","containerName":"acmeinc","sasToken":"?sv=2018-03-28&sr=c&sig=GizH0qjGsshuQHq9sIYyw5V%2Bkpwh1lSH7D7G4qPHAxk%3D&st=2020-04-15T14%3A41%3A26Z&se=2020-04-15T15%3A46%3A26Z&sp=wl"}
 
 #azureFunctionUrl="http://localhost:7071"
 azureFunctionUrl="https://functionapp00005.azurewebsites.net"
@@ -26,7 +26,13 @@ echo "SAS Token:      $sasToken"
 today=`date +%Y-%m-%d`
 
 # Create test file
-echo "test" > myFile.txt
+echo "CustomerId,CustomerName" > myFile.txt
+echo "1,Microsoft" >> myFile.txt
+echo "2,Contoso"   >> myFile.txt
+echo "3,Acme"      >> myFile.txt
+echo "4,Walmart"   >> myFile.txt
+echo "5,Target"    >> myFile.txt
+
 
 # Upload 1 or more files to a folder with the date
 # NOTE: You can also use azcopy

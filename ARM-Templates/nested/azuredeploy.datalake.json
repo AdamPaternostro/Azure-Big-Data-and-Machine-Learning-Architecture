@@ -3,10 +3,11 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "dataLakeName": {
-      "type": "string"
+      "type": "object"
     }
   },
-  "variables": {},
+  "variables": {
+  },
   "resources": [
     {
       "type": "Microsoft.Storage/storageAccounts",
@@ -15,19 +16,20 @@
         "tier": "Standard"
       },
       "kind": "StorageV2",
-      "name": "[parameters('dataLakeName')]",
+      "name": "[parameters('dataLakeName').storageConfig[copyIndex()].name]",
       "apiVersion": "2018-03-01-preview",
       "location": "[resourceGroup().location]",
       "properties": {
         "networkAcls": {
           "bypass": "AzureServices",
-          "virtualNetworkRules": [],
-          "ipRules": [],
+          "virtualNetworkRules": [
+          ],
+          "ipRules": [
+          ],
           "defaultAction": "Allow"
         },
         "supportsHttpsTrafficOnly": true,
-        "isHnsEnabled":true,
-        "accessTier": "Hot",
+        "isHnsEnabled": true,
         "encryption": {
           "services": {
             "file": {
@@ -40,8 +42,14 @@
           "keySource": "Microsoft.Storage"
         }
       },
-      "dependsOn": []
+      "copy": {
+        "name": "storagecopy",
+        "count": "[length(parameters('dataLakeName').storageConfig)]"
+      },
+      "dependsOn": [
+      ]
     }
   ],
-  "outputs": {}
+  "outputs": {
+  }
 }
