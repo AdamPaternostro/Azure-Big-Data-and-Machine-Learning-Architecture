@@ -28,6 +28,9 @@
         },
         "adfname": {
             "value": "datafactory00005"
-        }       
+        },
+        "landingZoneDataLakeContainer": {
+            "value": "landing"
+        }
     }
 }

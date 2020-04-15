@@ -97,7 +97,7 @@ namespace AzureFunctionApp
                             int blobsIndex = removedPrefix.IndexOf("/blobs/") + 7;
                             int lastSlashIndex = removedPrefix.LastIndexOf("/");
                             string inputFileDirectory = removedPrefix.Substring(blobsIndex, lastSlashIndex - blobsIndex);
-                            string outputFileSystem = "raw";
+                            string outputFileSystem = Environment.GetEnvironmentVariable("LandingZoneDataLakeContainer");
                             string outputFileDirectory = string.Format("{0:yyyy}/{1:MM}/{2:dd}/{3}", dtNow, dtNow, dtNow, customerId);
 
                             DataFactoryService.StartPipeline(inputFileSystem, inputFileDirectory, outputFileSystem, outputFileDirectory, result.PipelineName, result.ResourceGroup, result.DataFactoryName, result.SubscriptionId, log);

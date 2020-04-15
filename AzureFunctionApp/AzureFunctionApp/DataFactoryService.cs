@@ -36,7 +36,7 @@ namespace AzureFunctionApp
                     { "inputFileSystem", inputFileSystem },
                     { "inputFileDirectory", inputFileDirectory },
                     { "outputFileSystem", outputFileSystem },
-                    { "outputFileSystem", outputFileSystem }
+                    { "outputFileDirectory", outputFileDirectory }
                 };
 
             CreateRunResponse runResponse = client.Pipelines.CreateRunWithHttpMessagesAsync(resourceGroup, dataFactoryName, pipelineName, parameters: parameters).Result.Body;

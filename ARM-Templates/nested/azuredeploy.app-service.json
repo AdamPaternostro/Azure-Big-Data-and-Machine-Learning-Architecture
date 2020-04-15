@@ -28,6 +28,10 @@
         },
         "adfname": {
             "type": "string"
+        },
+        "landingZoneDataLakeContainer":
+        {
+            "type": "string"
         }
     },
     "resources": [
@@ -115,6 +119,11 @@
                         {
                             "name": "DataFactoryName",
                             "value": "[parameters('adfname')]"
+                        },
+                        {
+
+                            "name":"LandingZoneDataLakeContainer",
+                            "value" : "[parameters('landingZoneDataLakeContainer')]"
                         }
                     ]
                 },

@@ -123,6 +123,3 @@ New-AzRoleAssignment -ObjectId $functionAppSPAppId -RoleDefinitionName "Owner" `
 # Cannot validate argument on parameter 'ObjectId'. The argument is null or empty. Provide an argument that is not null or empty, and then try the command again.
 New-AzRoleAssignment -ObjectId $functionAppSPAppId -RoleDefinitionName "Contributor" `
 -Scope "/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.DataFactory/factories/$dataFactoryName"
-
-
-# TODO, set App Service to Always ON!
