@@ -1,0 +1,22 @@
+{
+    "topic": "/subscriptions/64a14e46-6c7d-4063-9665-c295287ab709/resourceGroups/Azure-Big-Data-Machine-Learning/providers/Microsoft.Storage/storageAccounts/landingzonestorage00005",
+    "subject": "/blobServices/default/containers/acmeinc/blobs/inbox/2020-04-16/end_file.txt",
+    "eventType": "Microsoft.Storage.BlobCreated",
+    "eventTime": "2020-04-16T20:37:15.1891376Z",
+    "id": "4e165b40-c01e-0104-4d2e-14258f06fdbe",
+    "data": {
+        "api": "PutBlob",
+        "requestId": "4e165b40-c01e-0104-4d2e-14258f000000",
+        "eTag": "0x8D7E245F2DEA344",
+        "contentType": "application/octet-stream",
+        "contentLength": 6,
+        "blobType": "BlockBlob",
+        "url": "https://landingzonestorage00005.blob.core.windows.net/acmeinc/inbox/2020-04-16/end_file.txt",
+        "sequencer": "000000000000000000000000000026b80000000000024f67",
+        "storageDiagnostics": {
+            "batchId": "7c1c3086-de4a-4f22-b845-329d1d4b93d0"
+        }
+    },
+    "dataVersion": "",
+    "metadataVersion": "1"
+}
