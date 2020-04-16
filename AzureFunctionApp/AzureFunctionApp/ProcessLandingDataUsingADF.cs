@@ -98,7 +98,7 @@ namespace AzureFunctionApp
                             int lastSlashIndex = removedPrefix.LastIndexOf("/");
                             string inputFileDirectory = removedPrefix.Substring(blobsIndex, lastSlashIndex - blobsIndex);
                             string outputFileSystem = Environment.GetEnvironmentVariable("LandingZoneDataLakeContainer");
-                            string outputFileDirectory = string.Format("customer-landing-data/{0:yyyy}/{1:MM}/{2:dd}/{3}", dtNow, dtNow, dtNow, customerId);
+                            string outputFileDirectory = string.Format("customer-landing-data/{0}/{1:yyyy}/{2:MM}/{3:dd}", customerId, dtNow, dtNow, dtNow);
 
                             DataFactoryService.StartPipeline(inputFileSystem, inputFileDirectory, outputFileSystem, outputFileDirectory, result.ADFPipelineName, result.ADFResourceGroup, result.ADFDataFactoryName, result.ADFSubscriptionId, log);
                             QueueService.DeleteQueueItem(queueName, queueItem, cloudQueue);
