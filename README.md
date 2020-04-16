@@ -11,7 +11,7 @@ A ready to use architecture for processing data and performing machine learning 
    1. An event from the upload will trigger a data factory to move data from the landing storage account to the data lake
 4. There is a data factory that will download NYC Taxi data (you execute the pipeline ProcessNYCTaxiData by hand)
    1. (This is being worked on!) A Data Flow will move the data from the landing zone on the data lake to the raw "bronze" zone (it will convert the files to parquet)
-   2. A Data Flow will move the data from the raw zone to the transformed "silve" zone (it will add refernce data)
+   2. A Data Flow will move the data from the raw zone to the transformed "silver" zone (it will add reference data)
    3. A Data Flow will move the data from the transformed zone to the enriched "gold" zone (it will place the data in the ready to use format)
    4. A Data Flow will move the data from the enriched/gold zone to the modeled zone (it will place the data in a b-star schema)
        1. SQL OD will load the data from the modeled zone to an Azure Analysis Service cube
@@ -21,7 +21,7 @@ A ready to use architecture for processing data and performing machine learning 
 # How to run
 
 ### Prerequisites
-1. Install PowerShell
+1. Install PowerShell: https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.7.0
 2. Install Visual Studio (to review the code - the goal is to have a devops deployment, right now you publish the Azure Function by hand)
 
 
