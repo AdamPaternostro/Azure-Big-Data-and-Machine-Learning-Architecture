@@ -29,7 +29,8 @@ namespace AzureFunctionApp
                 string cloudKey = null;
 
 
-                // NOT Working - this would only allow this IP to upload the file (you may or may not want this if for some reason a different IP would upload)
+                // NOTE: Not Implemented - this would only allow this IP to upload the file (you may or may not want this if for some reason a different IP would upload)
+                // NOTE: You can also put the WhiteListedIP addresses in the CosmosDB account
                 string clientIP = null;
                 //clientIP = req.Headers["CLIENT-IP"];
 
