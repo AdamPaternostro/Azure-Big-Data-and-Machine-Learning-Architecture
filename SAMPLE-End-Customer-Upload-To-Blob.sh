@@ -37,12 +37,12 @@ echo "SAS Token:      $sasToken"
 ###########################################################
 # Create a Test Sample file to upload
 ###########################################################
-echo "CustomerId,CustomerName" > myFile.txt
-echo "1,Microsoft" >> myFile.txt
-echo "2,Contoso"   >> myFile.txt
-echo "3,Acme"      >> myFile.txt
-echo "4,Walmart"   >> myFile.txt
-echo "5,Target"    >> myFile.txt
+echo "CustomerId,CustomerName" > myFile.csv
+echo "1,Microsoft" >> myFile.csv
+echo "2,Contoso"   >> myFile.csv
+echo "3,Acme"      >> myFile.csv
+echo "4,Walmart"   >> myFile.csv
+echo "5,Target"    >> myFile.csv
 
 
 ###########################################################
@@ -53,7 +53,7 @@ echo "5,Target"    >> myFile.txt
 # 2. You could use Azure CLI
 # 3. You could use Azure azcopy commands
 ###########################################################
-az storage blob upload --container-name $containerName --file ./myFile.txt --name inbox/$today/myFile.txt --account-name $accountName --sas-token $sasToken    
+az storage blob upload --container-name $containerName --file ./myFile.csv --name inbox/$today/myFile.csv --account-name $accountName --sas-token $sasToken    
 
 
 ###########################################################

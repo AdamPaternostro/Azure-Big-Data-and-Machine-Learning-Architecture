@@ -36,12 +36,12 @@ Write-Output "SAS Token:      $sasToken"
 ###########################################################
 # Create a Test Sample file to upload
 ###########################################################
-Write-Output "CustomerId,CustomerName" > myFile.txt
-Write-Output "1,Microsoft" >> myFile.txt
-Write-Output "2,Contoso"   >> myFile.txt
-Write-Output "3,Acme"      >> myFile.txt
-Write-Output "4,Walmart"   >> myFile.txt
-Write-Output "5,Target"    >> myFile.txt
+Write-Output "CustomerId,CustomerName" > myFile.csv
+Write-Output "1,Microsoft" >> myFile.csv
+Write-Output "2,Contoso"   >> myFile.csv
+Write-Output "3,Acme"      >> myFile.csv
+Write-Output "4,Walmart"   >> myFile.csv
+Write-Output "5,Target"    >> myFile.csv
 
 
 ###########################################################
@@ -53,15 +53,15 @@ Write-Output "5,Target"    >> myFile.txt
 # 3. You could use Azure azcopy commands
 ###########################################################
 
-# Target path (replace myFile.txt with your file name)
-$uri = "https://$accountName.blob.core.windows.net/$containerName/inbox/$today/myFile.txt$sasToken"
+# Target path (replace myFile.csv with your file name)
+$uri = "https://$accountName.blob.core.windows.net/$containerName/inbox/$today/myFile.csv$sasToken"
 
 $headers = @{
     'x-ms-blob-type' = 'BlockBlob'
 }
 
 # Upload file using just REST
-Invoke-RestMethod -Uri $uri -Method Put -Headers $headers -InFile myFile.txt
+Invoke-RestMethod -Uri $uri -Method Put -Headers $headers -InFile myFile.csv
 
 
 ###########################################################
@@ -81,4 +81,4 @@ $headers = @{
 }
 
 # Upload file using just REST
-Invoke-RestMethod -Uri $uri -Method Put -Headers $headers -InFile myFile.txt
+Invoke-RestMethod -Uri $uri -Method Put -Headers $headers -InFile myFile.csv
