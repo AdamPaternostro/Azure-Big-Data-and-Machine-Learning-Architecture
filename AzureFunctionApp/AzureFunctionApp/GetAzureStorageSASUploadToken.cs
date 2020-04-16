@@ -64,7 +64,10 @@ namespace AzureFunctionApp
                 customerId = customerId.ToLower();
 
                 DocumentDBRepository<CosmosIngestionData> documentDBRepository = new DocumentDBRepository<CosmosIngestionData>(log);
-                var result = documentDBRepository.GetItems(o => o.CustomerId == customerId && o.PartitionId == customerId && o.CustomerSecret == customerSecret).FirstOrDefault();
+                var result = documentDBRepository.GetItems(o => o.CustomerId == customerId && 
+                                                           o.PartitionId == customerId && 
+                                                           o.CustomerSecret == customerSecret &&
+                                                           o.isCustomerEnabled).FirstOrDefault();
 
 
                 // INSERT SEED DATA

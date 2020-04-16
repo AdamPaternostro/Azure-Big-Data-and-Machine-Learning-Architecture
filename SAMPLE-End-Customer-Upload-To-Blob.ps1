@@ -81,4 +81,4 @@ $headers = @{
 }
 
 # Upload file using just REST
-Invoke-RestMethod -Uri $uri -Method Put -Headers $headers -InFile myFile.csv
+Invoke-RestMethod -Uri $uri -Method Put -Headers $headers -InFile end_file.txt
