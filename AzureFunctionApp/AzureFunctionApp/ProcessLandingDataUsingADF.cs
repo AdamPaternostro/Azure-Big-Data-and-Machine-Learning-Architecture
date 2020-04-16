@@ -87,7 +87,7 @@ namespace AzureFunctionApp
                     if (result.isADFEnabled)
                     {
                         // We are good to try to start the ADF
-                        log.LogInformation("Starting Pipeline: " + result.PipelineName);
+                        log.LogInformation("Starting Pipeline: " + result.ADFPipelineName);
 
                         try
                         {
@@ -98,22 +98,22 @@ namespace AzureFunctionApp
                             int lastSlashIndex = removedPrefix.LastIndexOf("/");
                             string inputFileDirectory = removedPrefix.Substring(blobsIndex, lastSlashIndex - blobsIndex);
                             string outputFileSystem = Environment.GetEnvironmentVariable("LandingZoneDataLakeContainer");
-                            string outputFileDirectory = string.Format("{0:yyyy}/{1:MM}/{2:dd}/{3}", dtNow, dtNow, dtNow, customerId);
+                            string outputFileDirectory = string.Format("customer-landing-data/{0:yyyy}/{1:MM}/{2:dd}/{3}", dtNow, dtNow, dtNow, customerId);
 
-                            DataFactoryService.StartPipeline(inputFileSystem, inputFileDirectory, outputFileSystem, outputFileDirectory, result.PipelineName, result.ResourceGroup, result.DataFactoryName, result.SubscriptionId, log);
+                            DataFactoryService.StartPipeline(inputFileSystem, inputFileDirectory, outputFileSystem, outputFileDirectory, result.ADFPipelineName, result.ADFResourceGroup, result.ADFDataFactoryName, result.ADFSubscriptionId, log);
                             QueueService.DeleteQueueItem(queueName, queueItem, cloudQueue);
                         }
                         catch (Exception ex)
                         {
                             // Pipeline could not start (it might be in a "provisioning state", set the queue item to try again in "5" minutes
-                            log.LogInformation("Error starting Pipeline (item not dequeued): " + result.PipelineName + " Error: " + ex.ToString());
+                            log.LogInformation("Error starting Pipeline (item not dequeued): " + result.ADFPipelineName + " Error: " + ex.ToString());
                             QueueService.IncreaseQueueItemLock(queueName, queueItem, TimeSpan.FromMinutes(5), cloudQueue);
                         }
                     }
                     else
                     {
                         // Pipeline is not enabled, set the queue item to try again in "5" minutes
-                        log.LogInformation("Pipeline: " + result.PipelineName + " is not enabled.  Setting queue item to retry in 5 minutes.");
+                        log.LogInformation("Pipeline: " + result.ADFPipelineName + " is not enabled.  Setting queue item to retry in 5 minutes.");
                         QueueService.IncreaseQueueItemLock(queueName, queueItem, TimeSpan.FromMinutes(5), cloudQueue);
                     }
                 }

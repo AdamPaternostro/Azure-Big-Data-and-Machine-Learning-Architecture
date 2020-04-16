@@ -29,11 +29,6 @@ namespace AzureFunctionApp
                 string cloudKey = null;
 
 
-                // NOTE: Not Implemented - this would only allow this IP to upload the file (you may or may not want this if for some reason a different IP would upload)
-                // NOTE: You can also put the WhiteListedIP addresses in the CosmosDB account
-                string clientIP = null;
-                //clientIP = req.Headers["CLIENT-IP"];
-
                 if (req.Host.ToString().ToLower().Contains("localhost"))
                 {
                     cloudAccountName = "devstoreaccount1";
@@ -76,14 +71,16 @@ namespace AzureFunctionApp
                 {
                     CosmosIngestionData acmeInc = new CosmosIngestionData();
                     acmeInc.CustomerId = "acmeinc";
-                    acmeInc.CustomerSecret = "0DC8B9026ECD402C84C66AFB5B87E28C";
-                    acmeInc.TokenExpireTimeInMinutes = 60;
-                    acmeInc.isCustomerEnabled = true;
                     acmeInc.PartitionId = "acmeinc";
-                    acmeInc.PipelineName = "CopyLandingDataToDataLake";
-                    acmeInc.ResourceGroup = Environment.GetEnvironmentVariable("ResourceGroup");
-                    acmeInc.DataFactoryName = Environment.GetEnvironmentVariable("DataFactoryName");
-                    acmeInc.SubscriptionId = Environment.GetEnvironmentVariable("SubscriptionId");
+                    acmeInc.ContainerName = "acmeinc";
+                    acmeInc.CustomerSecret = "0DC8B9026ECD402C84C66AFB5B87E28C";
+                    acmeInc.CustomerSASTokenExpireTimeInMinutes = 60;
+                    acmeInc.CustomerWhitelistIPAddress = null;
+                    acmeInc.isCustomerEnabled = true;
+                    acmeInc.ADFPipelineName = "CopyLandingDataToDataLake";
+                    acmeInc.ADFResourceGroup = Environment.GetEnvironmentVariable("ResourceGroup");
+                    acmeInc.ADFDataFactoryName = Environment.GetEnvironmentVariable("DataFactoryName");
+                    acmeInc.ADFSubscriptionId = Environment.GetEnvironmentVariable("SubscriptionId");
                     acmeInc.isADFEnabled = true;
 
                     // Insert the seed data
@@ -97,7 +94,7 @@ namespace AzureFunctionApp
                 {
                     // create a blob container
                     // create a SAS token with list and write privilages (no read or delete) - they can upload, but never download to protect their data
-                    string sasToken = GetSASToken(result.ContainerName, clientIP, result.TokenExpireTimeInMinutes, cloudAccountName, cloudKey);
+                    string sasToken = GetSASToken(result.ContainerName, result.CustomerWhitelistIPAddress, result.CustomerSASTokenExpireTimeInMinutes, cloudAccountName, cloudKey);
                     ReturnData returnData = new ReturnData()
                     {
                         AccountName = cloudAccountName == "devstoreaccount1" ? "http://127.0.0.1:10000/devstoreaccount1" : cloudAccountName,
