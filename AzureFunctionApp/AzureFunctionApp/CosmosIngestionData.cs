@@ -17,8 +17,9 @@ namespace AzureFunctionApp
 
         public string ContainerName { get; set; }
 
-        // You can also do a range of addresses.  You will need to change this to a begin and end range and then change the SAS token code
-        public string CustomerWhitelistIPAddress { get; set; }
+        public string CustomerWhitelistIPAddressMinimum { get; set; }
+
+        public string CustomerWhitelistIPAddressMaximum { get; set; }
 
         public int CustomerSASTokenExpireTimeInMinutes { get; set; }
 

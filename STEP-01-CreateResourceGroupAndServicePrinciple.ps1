@@ -1,4 +1,6 @@
 # Description: This will create a service principal that will be used for deploying and managing all resources
+Set-Location C:\Azure-Big-Data-and-Machine-Learning-Architecture\
+
 
 ####################################################
 # Manually connect (you need to be a admin of the subscription)

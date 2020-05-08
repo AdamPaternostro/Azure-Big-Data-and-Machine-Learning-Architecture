@@ -33,7 +33,6 @@ echo "Container Name: $containerName"
 echo "SAS Token:      $sasToken"
 
 
-
 ###########################################################
 # Create a Test Sample file to upload
 ###########################################################
@@ -51,9 +50,16 @@ echo "5,Target"    >> myFile.csv
 # NOTES: 
 # 1. You could use Azure PowerShell (Core)
 # 2. You could use Azure CLI
-# 3. You could use Azure azcopy commands
+# 3. You could use Azure azcopy commands (*** use this for uploading lots of large files ***)
 ###########################################################
-az storage blob upload --container-name $containerName --file ./myFile.csv --name inbox/$today/myFile.csv --account-name $accountName --sas-token $sasToken    
+
+# Target path
+uri="https://$accountName.blob.core.windows.net/$containerName/inbox/$today/myFile.csv$sasToken"
+
+headers="x-ms-blob-type:BlockBlob"
+
+# Upload file using just REST
+curl $uri -H $headers --upload-file myFile.csv
 
 
 ###########################################################
@@ -65,4 +71,10 @@ az storage blob upload --container-name $containerName --file ./myFile.csv --nam
 # Create a marker file
 touch end_file.txt
 
-az storage blob upload --container-name $containerName --file end_file.txt --name inbox/$today/end_file.txt --account-name $accountName --sas-token $sasToken    
+# Target path
+uri="https://$accountName.blob.core.windows.net/$containerName/inbox/$today/end_file.txt$sasToken"
+
+headers="x-ms-blob-type:BlockBlob"
+
+# Upload file using just REST
+curl $uri -H $headers --upload-file end_file.txt

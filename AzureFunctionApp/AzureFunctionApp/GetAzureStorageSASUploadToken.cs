@@ -75,7 +75,8 @@ namespace AzureFunctionApp
                     acmeInc.ContainerName = "acmeinc";
                     acmeInc.CustomerSecret = "0DC8B9026ECD402C84C66AFB5B87E28C";
                     acmeInc.CustomerSASTokenExpireTimeInMinutes = 60;
-                    acmeInc.CustomerWhitelistIPAddress = null;
+                    acmeInc.CustomerWhitelistIPAddressMinimum = null;  // You would make the min and max the same for a single IP address
+                    acmeInc.CustomerWhitelistIPAddressMaximum = null;  // You would make the min and max the same for a single IP address
                     acmeInc.isCustomerEnabled = true;
                     acmeInc.ADFPipelineName = "CopyLandingDataToDataLake";
                     acmeInc.ADFResourceGroup = Environment.GetEnvironmentVariable("ResourceGroup");
@@ -94,7 +95,8 @@ namespace AzureFunctionApp
                 {
                     // create a blob container
                     // create a SAS token with list and write privilages (no read or delete) - they can upload, but never download to protect their data
-                    string sasToken = GetSASToken(result.ContainerName, result.CustomerWhitelistIPAddress, result.CustomerSASTokenExpireTimeInMinutes, cloudAccountName, cloudKey);
+                    string sasToken = GetSASToken(result.ContainerName, result.CustomerWhitelistIPAddressMinimum, result.CustomerWhitelistIPAddressMaximum,
+                                                  result.CustomerSASTokenExpireTimeInMinutes, cloudAccountName, cloudKey);
                     ReturnData returnData = new ReturnData()
                     {
                         AccountName = cloudAccountName == "devstoreaccount1" ? "http://127.0.0.1:10000/devstoreaccount1" : cloudAccountName,
@@ -118,9 +120,9 @@ namespace AzureFunctionApp
         } // Run
 
 
-        private static string GetSASToken(string containerName, string clientIPAddress, int tokenExpireTimeInMinutes, string cloudAccountName, string cloudKey)
+        private static string GetSASToken(string containerName, string customerWhitelistIPAddressMinimum, string customerWhitelistIPAddressMaximum,
+                                          int tokenExpireTimeInMinutes, string cloudAccountName, string cloudKey)
         {
-
             Microsoft.WindowsAzure.Storage.Auth.StorageCredentials storageCredentials = new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(cloudAccountName, cloudKey);
             Microsoft.WindowsAzure.Storage.CloudStorageAccount storageAccount = null;
 
@@ -149,13 +151,15 @@ namespace AzureFunctionApp
 
 
             string sasToken = null;
-            if (string.IsNullOrWhiteSpace(clientIPAddress) || cloudAccountName == "devstoreaccount1")
+            if (string.IsNullOrWhiteSpace(customerWhitelistIPAddressMinimum) || 
+                string.IsNullOrWhiteSpace(customerWhitelistIPAddressMaximum) || 
+                cloudAccountName == "devstoreaccount1")
             {
                 sasToken = container.GetSharedAccessSignature(policy);
             }
             else
             {
-                Microsoft.WindowsAzure.Storage.IPAddressOrRange iPAddressOrRange = new Microsoft.WindowsAzure.Storage.IPAddressOrRange(clientIPAddress);
+                Microsoft.WindowsAzure.Storage.IPAddressOrRange iPAddressOrRange = new Microsoft.WindowsAzure.Storage.IPAddressOrRange(customerWhitelistIPAddressMinimum, customerWhitelistIPAddressMaximum);
                 sasToken = container.GetSharedAccessSignature(policy, null, Microsoft.WindowsAzure.Storage.SharedAccessProtocol.HttpsOnly, iPAddressOrRange);
             }
 

@@ -11,9 +11,11 @@ A ready to use architecture for processing data and performing machine learning 
    1. An event from the upload will trigger a data factory to move data from the landing storage account to the data lake
 4. There is a data factory that will download NYC Taxi data (you execute the pipeline ProcessNYCTaxiData by hand)
    1. (This is being worked on!) A Data Flow will move the data from the landing zone on the data lake to the raw "bronze" zone (it will convert the files to parquet)
-   2. A Data Flow will move the data from the raw zone to the transformed "silver" zone (it will add reference data)
-   3. A Data Flow will move the data from the transformed zone to the enriched "gold" zone (it will place the data in the ready to use format)
-   4. A Data Flow will move the data from the enriched/gold zone to the modeled zone (it will place the data in a b-star schema)
+   2. A Databricks notebook will then create reference data tables in the raw zone.
+   3. A Data Flow will move the data from the raw zone to the transformed "silver" zone (it will add reference data)
+      
+   4. A Data Flow will move the data from the transformed zone to the enriched "gold" zone (it will place the data in the ready to use format)
+   5. A Data Flow will move the data from the enriched/gold zone to the modeled zone (it will place the data in a b-star schema)
        1. SQL OD will load the data from the modeled zone to an Azure Analysis Service cube
        2. A SQL Hyerscale database will be loaded with the modeled data
 
@@ -29,9 +31,9 @@ A ready to use architecture for processing data and performing machine learning 
 1. Clone this repo to your local computer (you can fork if you want)
 2. Fork the https://github.com/AdamPaternostro/Azure-Big-Data-and-Machine-Learning-Architecture-ADF to a GitHub account
 3. Replace the string "00005" with something else in lowercase e.g. "00099" withing all the downloaded files (hint: use VS Code or something).  This will generate unique Azure names.
-3. Run STEP-01-CreateResourceGroupAndServicePrinciple.ps1 (must be an Azure admin)
+3. Run STEP-01-CreateResourceGroupAndServicePrinciple.ps1 (must be an Subscription admin)
 4. Run STEP-02-Deploy-ARM-Template.ps1 (uses service principal above)
-5. Run STEP-03-InitializationScript.ps1 (must be an Azure admin, at least until the service principal gets correct permissions set)
+5. Run STEP-03-InitializationScript.ps1 (must be an Subscription admin, at least until the service principal gets correct permissions set)
 
 
 ### Copy Sample Taxi Data
@@ -51,6 +53,9 @@ A ready to use architecture for processing data and performing machine learning 
   - The Azure Function will run every 5 minutes and pickup the queue item
   - The Azure Function will kick off the ADF Pipeline CopyLandingDataToDataLake
   - The ADF pipeline will copy the data from the landing storage account to the data lake.
+
+# Ideas
+- Use Azure Data Share to transfer files from customer that have an Azure subsription.  This eliminates the need for the customer to perform an upload process.
 
 
 # Task List

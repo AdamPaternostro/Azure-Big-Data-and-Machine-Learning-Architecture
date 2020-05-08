@@ -50,15 +50,13 @@ Write-Output "5,Target"    >> myFile.csv
 # NOTES: 
 # 1. You could use Azure PowerShell
 # 2. You could use Azure CLI
-# 3. You could use Azure azcopy commands
+# 3. You could use Azure azcopy commands (*** use this for uploading lots of large files ***)
 ###########################################################
 
 # Target path (replace myFile.csv with your file name)
 $uri = "https://$accountName.blob.core.windows.net/$containerName/inbox/$today/myFile.csv$sasToken"
 
-$headers = @{
-    'x-ms-blob-type' = 'BlockBlob'
-}
+$headers = @{ 'x-ms-blob-type' = 'BlockBlob' }
 
 # Upload file using just REST
 Invoke-RestMethod -Uri $uri -Method Put -Headers $headers -InFile myFile.csv
@@ -76,9 +74,7 @@ Write-Output "" > end_file.txt
 # Target path
 $uri = "https://$accountName.blob.core.windows.net/$containerName/inbox/$today/end_file.txt$sasToken"
 
-$headers = @{
-    'x-ms-blob-type' = 'BlockBlob'
-}
+$headers = @{ 'x-ms-blob-type' = 'BlockBlob' }
 
 # Upload file using just REST
 Invoke-RestMethod -Uri $uri -Method Put -Headers $headers -InFile end_file.txt
